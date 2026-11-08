@@ -8,17 +8,6 @@ html,body{height:100%;margin:0}
 body{background:#1c0000 repeating-conic-gradient(#2a0000 0 25%,#1c0000 0 50%) 0 0/16px 16px;color:#fcfcfc;font-family:"DotGothic16",monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;user-select:none;-webkit-user-select:none}
 #wrap{border:4px solid #f8b800;outline:4px solid #a81000;background:#000;line-height:0}
 canvas{image-rendering:pixelated;display:block;touch-action:none}
-#howto{font:inherit;font-size:12px;margin-top:7px;background:#500;color:#fcfcfc;border:2px solid #f8b800;padding:5px 14px;cursor:pointer}
-#howtoPanel{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:14px}
-#howtoPanel[hidden]{display:none}
-#howtoCard{width:min(560px,100%);max-height:min(82vh,680px);background:#1c0000;border:3px solid #f8b800;box-shadow:0 0 0 4px #500;display:flex;flex-direction:column}
-.howHead{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#a81000;border-bottom:2px solid #f8b800;font-size:17px}
-#howtoClose{font:inherit;font-size:22px;color:#fff;background:#500;border:1px solid #f8b800;width:34px;height:32px}
-.howBody{padding:10px 15px 14px;overflow-y:auto;overscroll-behavior:contain;font-size:13px;line-height:1.55}
-.howBody h3{font-size:15px;color:#f8b800;margin:12px 0 5px;border-bottom:1px solid #8c4a00;padding-bottom:3px}
-.howBody h3:first-child{margin-top:0}
-.howBody p{margin:4px 0}
-.howBody b{color:#f8d060}
 #snd{font:inherit;font-size:12px;margin-top:12px;background:#a81000;color:#fcfcfc;border:2px solid #f8b800;padding:4px 10px;cursor:pointer}
 #pad{display:none;width:100%;max-width:560px;justify-content:space-between;align-items:center;padding:8px 18px}
 @media(pointer:coarse){#pad{display:flex}}
@@ -30,36 +19,12 @@ canvas{image-rendering:pixelated;display:block;touch-action:none}
 </style></head><body>
 <div id="wrap"><canvas id="c"></canvas></div>
 <button id="snd">おと ON (M)</button>
-<button id="howto" aria-haspopup="dialog" aria-controls="howtoPanel">操作方法</button>
-<div id="howtoPanel" role="dialog" aria-modal="true" aria-labelledby="howtoTitle" hidden>
-  <div id="howtoCard">
-    <div class="howHead"><strong id="howtoTitle">操作方法</strong><button id="howtoClose" aria-label="閉じる">×</button></div>
-    <div class="howBody">
-      <h3>基本操作</h3>
-      <p><b>← / →</b>　左右に移動</p>
-      <p><b>↑</b>　ジャンプ</p>
-      <p><b>↓</b>　ガード（長く使い続けるとゲージがたまり、一定量で一時的にガード不能）</p>
-      <p><b>A</b>　攻撃</p>
-      <p><b>↓ ＋ A</b>　ガード中にAを押してゲージをためる</p>
-      <p><b>D</b>　ネロビティ（ゲージ100％で発動）</p>
-      <h3>牛・馬・狼モード</h3>
-      <p><b>G / 牛</b>　牛モード：攻撃のダメージが2倍</p>
-      <p><b>B / 馬</b>　馬モード：移動速度が2倍</p>
-      <p><b>R / 狼</b>　狼モード：攻撃やガード中のゲージ増加量が2倍</p>
-      <p>各モードの効果は7秒間。使用後は20秒待つと再使用できます。</p>
-      <h3>アーケードモード限定</h3>
-      <p><b>A ＋ D 同時押し</b>　恐竜に変身。Aで炎を発射できます（クールタイム0.5秒）。</p>
-      <h3>スマートフォン</h3>
-      <p>画面下の十字ボタンで移動・ジャンプ・ガード。A・Dボタンで攻撃とネロビティ、牛・馬・狼ボタンで各モードを使えます。</p>
-    </div>
-  </div>
-</div>
-<div id="help">←→ いどう　↑ ジャンプ　↓ ガード（使いすぎ注意）　A こうげき　↓+A ゲージため　D ネロビティ　G 牛　B 馬　R 狼（20秒で再使用）</div>
+
 <div id="pad"><div class="dp"><button class="pb u" data-k="u">▲</button><button class="pb l" data-k="l">◀</button><button class="pb r" data-k="r">▶</button><button class="pb dn" data-k="dn">▼</button></div><div class="md"><button class="pb" data-k="cow">牛</button><button class="pb" data-k="horse">馬</button><button class="pb" data-k="wolf">狼</button></div><div class="ab"><button class="pb" data-k="a">A<small>こうげき</small></button><button class="pb" data-k="d">D<small>ネロビティ</small></button></div></div>
 <script>
 const $=id=>document.getElementById(id),W=320,H=180,GY=156,cv=$('c'),ctx=cv.getContext('2d'),FONT='"DotGothic16",monospace';
 cv.width=W;cv.height=H;ctx.imageSmoothingEnabled=false;
-let P,Z,ph='title',pt=0,hs=0,pops=[],fx=[],shots=[],bn={t:0},res='',snd=true,ac=null,last=0,NOW=0,gameMode='story',modeSelect=0,arcadeIndex=0,heldAB={a:false,d:false};const K={l:0,r:0,u:0,dn:0};
+let P,Z,ph='title',pt=0,howtoScroll=0,hs=0,pops=[],fx=[],shots=[],bn={t:0},res='',snd=true,ac=null,last=0,NOW=0,gameMode='story',modeSelect=0,arcadeIndex=0,heldAB={a:false,d:false};const K={l:0,r:0,u:0,dn:0};
 const ENEMIES=[{id:'zeo',name:'ゼオ',hp:100,scale:1},{id:'crab',name:'讃岐平家蟹',hp:125,scale:1.8},{id:'daruma',name:'水啜り達磨',hp:145,scale:1.65},{id:'giant',name:'巨人',hp:180,scale:2.15}];
 let enemyName='ゼオ';
 const PP={skin:'#f8b878',hair:'#000',shirt:'#fcfcfc',shade:'#bcbcbc',pants:'#000',shoe:'#000',belt:'#000',eye:'#000',band:'#f8b878',gold:'#bcbcbc'};
@@ -123,7 +88,7 @@ function newFight(type){initF(type);ph='intro';pt=0;hs=0;pops=[];fx=[];shots=[];
 function activateDino(){if(gameMode!=='arcade'||ph!=='fight'||P.ko||P.dino)return;P.dino=true;P.ba=0;P.bd=0;P.fm='';P.ft=0;ban('中村が恐竜に変身！','#f8b800',24,1.5);sfx([[180,.08],[260,.08],[390,.18]],'sawtooth',.06)}
 function fireShot(owner,x,y,face,speed,damage,color,kind){shots.push({owner,x,y,face,speed,damage,color,kind,t:1.5,hit:false})}
 function upd(dt){
-if(ph==='title'||ph==='arcadeSelect'||ph==='res'||ph==='end'||ph==='story'){pt+=dt;if(ph==='story'){const o=sc|0;sc+=dt*30;if((sc|0)>o&&(sc|0)%2===0&&sc<STORY[si].length)sfx([[740,.02]],'square',.015)}return}
+if(ph==='title'||ph==='howto'||ph==='arcadeSelect'||ph==='res'||ph==='end'||ph==='story'){pt+=dt;if(ph==='story'){const o=sc|0;sc+=dt*30;if((sc|0)>o&&(sc|0)%2===0&&sc<STORY[si].length)sfx([[740,.02]],'square',.015)}return}
 if(hs>0){hs-=dt;return}
 pt+=dt;bn.t-=dt;
 if(ph==='intro'){if(pt>1.5){ph='fight';pt=0}}
@@ -158,7 +123,7 @@ const zw=Math.round(130*Z.hp/Z.maxHp),zl=Z.hp>0&&Z.hp<=Z.maxHp*.2;r(180,19,132,9
 r(0,163,W,17,'#000');r(0,163,W,1,'#f8b800');ctx.font='16px '+FONT;ctx.textBaseline='top';ctx.textAlign='left';ctx.fillStyle='#7a4a38';ctx.fillText('ネロビティ',4,164);
 r(87,167,122,10,'#7a4a38');r(88,168,120,8,'#200000');const full=P.gauge>=100,n=Math.round(P.gauge/100*24);for(let i=0;i<n;i++)r(88+i*5,168,4,8,full&&bl?'#fcfcfc':'#d89030');
 [['cow','牛','#f83800'],['horse','馬','#f8b800'],['wolf','狼','#3cbcfc']].forEach(([k,c,col],i)=>{const x=220+i*32,on=P.fm===k;T(c,x,164,16,on?(bl?col:'#fcfcfc'):P.used[k]?'#503030':'#fcfcfc');if(on)r(x,178,Math.round(16*P.ft/7),2,col);else if(P.used[k]>0)r(x,178,Math.round(16*(1-P.used[k]/20)),2,'#887060')})}
-function draw(){if(ph==='title')return drawTitle();if(ph==='arcadeSelect')return drawArcadeSelect();if(ph==='story')return drawStory();if(ph==='end')return drawEnd();ctx.drawImage(bgc,0,0);drawF(Z,PZ);drawF(P,PP);
+function draw(){if(ph==='title')return drawTitle();if(ph==='howto')return drawHowto();if(ph==='arcadeSelect')return drawArcadeSelect();if(ph==='story')return drawStory();if(ph==='end')return drawEnd();ctx.drawImage(bgc,0,0);drawF(Z,PZ);drawF(P,PP);
 for(const f of[P,Z])if(f.nero&&f.nt>=.45&&f.nt<.7){const X=Math.round(f.x),x0=f.face>0?X+22:X-22-44,Y=Math.round(f.y);ctx.fillStyle=(NOW/40|0)%2?'#f8b800':'#f83800';ctx.fillRect(x0,Y-27,44,12);ctx.fillStyle='#fcfcfc';ctx.fillRect(x0,Y-24,44,6)}
 for(const s0 of shots){ctx.fillStyle=s0.color;ctx.fillRect(Math.round(s0.x)-5,Math.round(s0.y)-3,10,6);if(s0.kind==='water'){ctx.fillStyle='#fcfcfc';ctx.fillRect(Math.round(s0.x)-2,Math.round(s0.y)-2,4,4)}}
 for(const e of fx){const s=Math.round(8*(1-e.t/.2))+2;ctx.fillStyle=e.c;ctx.fillRect(Math.round(e.x)-s,Math.round(e.y)-1,s*2,2);ctx.fillRect(Math.round(e.x)-1,Math.round(e.y)-s,2,s*2)}
@@ -178,7 +143,8 @@ if(sm){R(-22,-22,1,1,'#a81000');R(-21,-21,3,1,'#a81000');R(-18,-22,1,1,'#a81000'
 R(-12,-4,44,14,'#d82800');R(-12,-4,44,2,'#fcfcfc');if(sm){R(-12,-24,3,10,'#202020');R(-12,-27,3,3,SK)}}
 function box(y,h){ctx.fillStyle='#fcfcfc';ctx.fillRect(4,y,312,h);ctx.fillStyle='#a81000';ctx.fillRect(6,y+2,308,h-4)}
 function drawTitle(){ctx.drawImage(bgc,0,0);ctx.fillStyle='rgba(0,0,0,.72)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fcfcfc';ctx.fillRect(0,38,W,2);ctx.fillStyle='#d82800';ctx.fillRect(0,40,W,76);ctx.fillStyle='#fcfcfc';ctx.fillRect(0,116,W,2);
-T('転転飯店',160,48,30,'#fcfcfc','center','#500000');T('中村亮太のネロビティをデューしろ！',160,86,13,'#fcfcfc','center','#500000');T((modeSelect===0?'▶ ':'　')+'ストーリーモード',160,120,15,modeSelect===0?'#f8b800':'#fcfcfc','center');T((modeSelect===1?'▶ ':'　')+'アーケードモード',160,138,15,modeSelect===1?'#f8b800':'#fcfcfc','center');T('←→ いどう　↑ ジャンプ',160,153,9,'#fcfcfc','center');T('A こうげき　D ガード',160,166,9,'#f8b800','center');}
+T('転転飯店',160,48,30,'#fcfcfc','center','#500000');T('中村亮太のネロビティをデューしろ！',160,86,13,'#fcfcfc','center','#500000');T((modeSelect===0?'▶ ':'　')+'ストーリーモード',160,120,13,modeSelect===0?'#f8b800':'#fcfcfc','center');T((modeSelect===1?'▶ ':'　')+'アーケードモード',160,138,13,modeSelect===1?'#f8b800':'#fcfcfc','center');T((modeSelect===2?'▶ ':'　')+'操作方法',160,156,13,modeSelect===2?'#f8b800':'#fcfcfc','center');}
+function drawHowto(){ctx.fillStyle='#180000';ctx.fillRect(0,0,W,H);ctx.fillStyle='#a81000';ctx.fillRect(0,0,W,25);T('操作方法',160,4,17,'#f8b800','center');ctx.fillStyle='#f8b800';ctx.fillRect(7,28,306,1);const lines=['【基本操作】','← / →　左右に移動','↑　ジャンプ　　↓　ガード','A　攻撃　　↓＋A　ゲージため','D　ゲージ100％でネロビティ発動','【牛・馬・狼モード】','G / 牛　牛：攻撃ダメージ2倍','B / 馬　馬：移動速度2倍','R / 狼　狼：攻撃・ガード時のゲージ増加2倍','各モードは7秒間。再使用まで20秒。','【アーケード限定】','A＋D同時押し：恐竜に変身','恐竜中にA：炎攻撃（クールタイム0.5秒）','【スマートフォン】','画面下のボタンで移動・ジャンプ・ガード、攻撃、各モードを操作'];const max=Math.max(0,lines.length-11);howtoScroll=Math.max(0,Math.min(max,howtoScroll));for(let i=0;i<11;i++){const s=lines[howtoScroll+i];if(s)T(s,10,34+i*11,9,s.startsWith('【')?'#f8b800':'#fcfcfc')}T('↑↓ スクロール　A / D もどる',160,165,9,'#3cbcfc','center');}
 function drawArcadeSelect(){ctx.drawImage(bgc,0,0);ctx.fillStyle='rgba(0,0,0,.78)';ctx.fillRect(0,0,W,H);T('たいせん相手をえらべ！',160,8,18,'#f8b800','center');ctx.fillStyle='#f8b800';ctx.fillRect(8,31,190,2);ENEMIES.forEach((e,i)=>{const y=39+i*29,sel=i===arcadeIndex;ctx.fillStyle=sel?'#f8b800':'#503020';ctx.fillRect(9,y,184,25);ctx.fillStyle=sel?'#a81000':'#180000';ctx.fillRect(11,y+2,180,21);T((sel?'▶ ':'　')+e.name,17,y+4,e.name.length>6?12:15,sel?'#f8b800':'#fcfcfc');T('HP '+e.hp,178,y+7,9,'#3cbcfc','right')});const e=ENEMIES[arcadeIndex];const preview={x:253,y:137,face:-1,enemyType:e.id,atk:0};if(!drawEnemy(preview))drawF(preview,PZ);T(e.name,250,39, e.name.length>6?10:13,'#fcfcfc','center');T('HP '+e.hp,250,54,12,'#f8b800','center');T('↑↓ えらぶ　A けってい',160,159,11,'#fcfcfc','center');T('D もどる',160,171,9,'#bcbcbc','center')}
 function drawStory(){const r=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)};
 r(0,0,W,112,'#fcfcfc');for(let x=0;x<W;x+=16)r(x,18,1,70,'#ece4dc');r(0,88,W,8,'#a81000');r(0,96,W,16,'#fcfcfc');for(let y=96,row=0;y<112;y+=8,row++)for(let x=(row%2)*16;x<W;x+=32)r(x,y,16,8,'#d82800');
@@ -198,7 +164,8 @@ if(pt>.8&&(NOW/500|0)%2)T('Aでタイトルへ',308,160,16,'#fcfcfc','right')}
 function loop(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;NOW=t;upd(dt);draw();requestAnimationFrame(loop)}
 /* ---------- input ---------- */
 function press(b){
-if(ph==='title'){if(b==='u'||b==='dn'){modeSelect=1-modeSelect;sfx([[440,.04]],'square',.025);return}if(b==='a'){if(modeSelect===0){gameMode='story';ph='story';si=0;sc=0;pt=0;sfx([[660,.06],[880,.1]])}else{gameMode='arcade';arcadeIndex=0;ph='arcadeSelect';pt=0;sfx([[440,.05],[660,.08]])}}return}
+if(ph==='title'){if(b==='u'){modeSelect=(modeSelect+2)%3;sfx([[440,.04]],'square',.025);return}if(b==='dn'){modeSelect=(modeSelect+1)%3;sfx([[440,.04]],'square',.025);return}if(b==='a'){if(modeSelect===0){gameMode='story';ph='story';si=0;sc=0;pt=0;sfx([[660,.06],[880,.1]])}else if(modeSelect===1){gameMode='arcade';arcadeIndex=0;ph='arcadeSelect';pt=0;sfx([[440,.05],[660,.08]])}else{ph='howto';howtoScroll=0;pt=0}}return}
+if(ph==='howto'){if(b==='u')howtoScroll=Math.max(0,howtoScroll-1);else if(b==='dn')howtoScroll=Math.min(4,howtoScroll+1);else if(b==='a'||b==='d'){ph='title';modeSelect=2;pt=0}return}
 if(ph==='arcadeSelect'){if(b==='u'||b==='l'){arcadeIndex=(arcadeIndex+ENEMIES.length-1)%ENEMIES.length;sfx([[440,.04]],'square',.025)}else if(b==='dn'||b==='r'){arcadeIndex=(arcadeIndex+1)%ENEMIES.length;sfx([[520,.04]],'square',.025)}else if(b==='a'){newFight(ENEMIES[arcadeIndex].id)}else if(b==='d'){ph='title';modeSelect=1;pt=0}return}
 if(ph==='story'){if(b==='a'){const n=STORY[si].length;if(sc<n)sc=n;else{si++;sc=0;if(si>=STORY.length)newFight()}}return}
 if(ph==='res'){if(b==='a'&&pt>.5){if(gameMode==='arcade'){ph='arcadeSelect';pt=0;shots=[];pops=[];fx=[]}else if(res==='void'){newFight('zeo')}else{ph='end';pt=0}}return}
@@ -207,16 +174,11 @@ if(ph!=='fight'||P.ko)return;
 if(b==='a'){if(P.dino&&gameMode==='arcade'){if(P.fireCd<=0){P.fireCd=.5;fireShot(P,P.x+P.face*22,P.y-27,P.face,190,10,'#f8b800','fire');ban('ファイヤー！','#f8b800',18,.35);sfx([[520,.05],[260,.12]],'sawtooth',.05)}}else P.ba=.14}else if(b==='d'){if(!P.dino)P.bd=.14;}else if(P.used[b]<=0&&P.stun<=0){P.used[b]=20;P.fm=b;P.ft=7;ban({cow:'牛モード！ダメージ2倍',horse:'馬モード！速度2倍',wolf:'狼モード！ゲージ2倍'}[b],{cow:'#f83800',horse:'#f8b800',wolf:'#3cbcfc'}[b],16,1.2);sfx([[330,.05],[494,.05],[660,.1]],'square',.05)}}
 const KM={ArrowLeft:'l',ArrowRight:'r',ArrowUp:'u',ArrowDown:'dn'};
 function toggleSnd(){snd=!snd;$('snd').textContent='おと '+(snd?'ON':'OFF')+' (M)'}
-addEventListener('keydown',e=>{const k=KM[e.key];if(k){if((ph==='title'||ph==='arcadeSelect')&&(k==='u'||k==='dn'||(ph==='arcadeSelect'&&(k==='l'||k==='r'))))press(k);else K[k]=1;e.preventDefault();return}if(e.repeat)return;const c=e.key.toLowerCase();if(c==='a'||c==='d'){heldAB[c]=true;if(heldAB.a&&heldAB.d){activateDino();e.preventDefault();return}if(c==='a')press('a');else press('d');e.preventDefault()}else if(c==='enter'||c===' '){press('a');e.preventDefault()}else if(c==='g')press('cow');else if(c==='b')press('horse');else if(c==='r')press('wolf');else if(c==='m')toggleSnd()});
+addEventListener('keydown',e=>{const k=KM[e.key];if(k){if((ph==='title'||ph==='howto'||ph==='arcadeSelect')&&(k==='u'||k==='dn'||(ph==='arcadeSelect'&&(k==='l'||k==='r'))))press(k);else K[k]=1;e.preventDefault();return}if(e.repeat)return;const c=e.key.toLowerCase();if(c==='a'||c==='d'){heldAB[c]=true;if(heldAB.a&&heldAB.d){activateDino();e.preventDefault();return}if(c==='a')press('a');else press('d');e.preventDefault()}else if(c==='enter'||c===' '){press('a');e.preventDefault()}else if(c==='g')press('cow');else if(c==='b')press('horse');else if(c==='r')press('wolf');else if(c==='m')toggleSnd()});
 addEventListener('keyup',e=>{const k=KM[e.key];if(k)K[k]=0;const c=e.key.toLowerCase();if(c==='a'||c==='d')heldAB[c]=false});addEventListener('blur',()=>{for(const k in K)K[k]=0;heldAB.a=heldAB.d=false});
 document.querySelectorAll('#pad .pb').forEach(b=>{const k=b.dataset.k,ed=['a','d','cow','horse','wolf'].includes(k);b.addEventListener('pointerdown',e=>{e.preventDefault();if((ph==='title'||ph==='arcadeSelect')&&(k==='u'||k==='dn'||(ph==='arcadeSelect'&&(k==='l'||k==='r'))))press(k);else if(k==='a'||k==='d'){heldAB[k]=true;if(heldAB.a&&heldAB.d)activateDino();else press(k)}else ed?press(k):K[k]=1});['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,e=>{if(!ed)K[k]=0;if(k==='a'||k==='d')heldAB[k]=false}))});
-cv.addEventListener('pointerdown',()=>{if(ph==='title'||ph==='res'||ph==='arcadeSelect')press('a')});$('snd').onclick=toggleSnd;
-const howtoPanel=$('howtoPanel');
-$('howto').onclick=()=>{howtoPanel.hidden=false;$('howtoClose').focus()};
-$('howtoClose').onclick=()=>{howtoPanel.hidden=true;$('howto').focus()};
-howtoPanel.addEventListener('pointerdown',e=>{if(e.target===howtoPanel)howtoPanel.hidden=true});
-addEventListener('keydown',e=>{if(e.key==='Escape'&&!howtoPanel.hidden){howtoPanel.hidden=true;$('howto').focus()}});
-function rs(){const px=$('pad').offsetHeight,s0=Math.min((innerWidth-24)/W,(innerHeight-px-$('help').offsetHeight-90)/H),s=s0>=2?Math.floor(s0):Math.max(s0,.5);cv.style.width=W*s+'px';cv.style.height=H*s+'px'}
+cv.addEventListener('pointerdown',()=>{if(ph==='title'||ph==='howto'||ph==='res'||ph==='arcadeSelect')press('a')});$('snd').onclick=toggleSnd;
+function rs(){const px=$('pad').offsetHeight,s0=Math.min((innerWidth-24)/W,(innerHeight-px-90)/H),s=s0>=2?Math.floor(s0):Math.max(s0,.5);cv.style.width=W*s+'px';cv.style.height=H*s+'px'}
 addEventListener('resize',rs);rs();
 initF();buildBG();
 if(document.fonts)document.fonts.load('16px DotGothic16',STORY.join('')+'ストーリーモードアーケードモード讃岐平家蟹水啜り達磨巨人恐竜ファイヤー').then(buildBG).catch(()=>{});
