@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1c0000"><title>転転飯店中村亮太のネロビティでデューを取れ！</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1c0000"><title>転転飯店中村亮太のネロビティをデューしろ！</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
 <style>
 :root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -31,7 +31,7 @@ const PW=Object.fromEntries(Object.keys(PP).map(k=>[k,'#fcfcfc']));
 const RS={due:['デュー！','中村亮太の勝ち！','ネロビティでゼオを倒した！','#f8b800'],void:['無効試合','ネロビティなしで倒してしまった…','ネロビティでとどめを刺せ！','#fcfcfc'],lose:['ゲームオーバー','中村亮太は敗れた…','もう一度 たたかおう！','#3cbcfc']};
 const DG='111101101101111 010110010010111 111001111100111 111001111001111 101101111001001 111100111001111 111100111101111 111001001001001 111101111101111 111101111001111'.split(' ');
 /* ---------- util ---------- */
-function T(s,x,y,sz,c,al,sh){ctx.font=sz+'px '+FONT;ctx.textBaseline='top';ctx.textAlign=al||'left';const o=Math.max(1,sz>>4);ctx.fillStyle=sh||'#000';for(const[dx,dy]of[[o,0],[-o,0],[0,o],[0,-o],[o,o]])ctx.fillText(s,x+dx,y+dy);ctx.fillStyle=c;ctx.fillText(s,x,y)}
+function T(s,x,y,sz,c,al,sh){if(['#f83800','#d82800','#a81000','#d8a090'].includes(String(c).toLowerCase()))c='#f8b800';ctx.font=sz+'px '+FONT;ctx.textBaseline='top';ctx.textAlign=al||'left';const o=Math.max(1,sz>>4);ctx.fillStyle=sh||'#000';for(const[dx,dy]of[[o,0],[-o,0],[0,o],[0,-o],[o,o]])ctx.fillText(s,x+dx,y+dy);ctx.fillStyle=c;ctx.fillText(s,x,y)}
 function num(v,x,y,sc,c){const s=String(v);let px=x-s.length*2*sc|0;for(const ch of s){const g=DG[+ch];for(const[col,off]of[['#000',1],[c,0]])for(let i=0;i<15;i++)if(g[i]==='1'){ctx.fillStyle=col;ctx.fillRect(px+(i%3)*sc+off,y+((i/3)|0)*sc+off,sc,sc)}px+=4*sc}}
 function sfx(a,type,v){if(!snd)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();let t=ac.currentTime;for(const[f,d]of a){const o=ac.createOscillator(),g=ac.createGain();o.type=type||'square';o.frequency.value=f;g.gain.setValueAtTime(v||.05,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d);t+=d}}catch(e){}}
 /* ---------- background (Chinese restaurant) ---------- */
@@ -129,7 +129,7 @@ if(sm){R(-22,-22,1,1,'#a81000');R(-21,-21,3,1,'#a81000');R(-18,-22,1,1,'#a81000'
 R(-12,-4,44,14,'#d82800');R(-12,-4,44,2,'#fcfcfc');if(sm){R(-12,-24,3,10,'#202020');R(-12,-27,3,3,SK)}}
 function box(y,h){ctx.fillStyle='#fcfcfc';ctx.fillRect(4,y,312,h);ctx.fillStyle='#a81000';ctx.fillRect(6,y+2,308,h-4)}
 function drawTitle(){ctx.drawImage(bgc,0,0);ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fcfcfc';ctx.fillRect(0,38,W,2);ctx.fillStyle='#d82800';ctx.fillRect(0,40,W,76);ctx.fillStyle='#fcfcfc';ctx.fillRect(0,116,W,2);
-T('転転飯店',160,52,32,'#fcfcfc','center','#500000');T('中村亮太のネロビティでデューを取れ！',160,94,16,'#fcfcfc','center','#500000');if((NOW/500|0)%2)T('Aボタンでスタート',160,146,16,'#d8a090','center')}
+T('転転飯店',160,52,32,'#fcfcfc','center','#500000');T('中村亮太のネロビティをデューしろ！',160,94,16,'#fcfcfc','center','#500000');if((NOW/500|0)%2)T('Aボタンでスタート',160,146,16,'#d8a090','center')}
 function drawStory(){const r=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)};
 r(0,0,W,112,'#fcfcfc');for(let x=0;x<W;x+=16)r(x,18,1,70,'#ece4dc');r(0,88,W,8,'#a81000');r(0,96,W,16,'#fcfcfc');for(let y=96,row=0;y<112;y+=8,row++)for(let x=(row%2)*16;x<W;x+=32)r(x,y,16,8,'#d82800');
 r(20,22,56,46,'#a81000');r(23,25,50,40,'#3cbcfc');r(47,25,2,40,'#fcfcfc');r(23,43,50,2,'#fcfcfc');r(14,18,10,56,'#d82800');r(72,18,10,56,'#d82800');r(130,24,24,8,'#d82800');r(138,16,8,24,'#d82800');
