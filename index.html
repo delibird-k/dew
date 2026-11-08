@@ -41,8 +41,8 @@ r(0,0,W,H,'#d82800');r(0,44,W,94,'#c81800');
 r(0,46,W,2,'#fcfcfc');r(0,104,W,2,'#fcfcfc');r(0,106,W,32,'#a81000');for(let x=0;x<W;x+=40)r(x+4,110,32,24,'#b81400');
 r(0,30,W,14,'#a81000');for(let x=0;x<W;x+=10){r(x,30,9,10,'#d82800');r(x,38,9,2,'#fcfcfc')}r(0,40,W,2,'#fcfcfc');r(0,42,W,2,'#f8b800');
 for(const x of[10,294]){r(x,44,16,94,'#fcfcfc');r(x+10,44,6,94,'#bcbcbc');for(let y=58;y<130;y+=24)r(x,y,16,4,'#d82800');r(x-2,44,20,6,'#a81000');r(x-2,132,20,6,'#a81000')}
-r(88,52,144,38,'#a81000');r(91,55,138,32,'#fcfcfc');r(91,55,138,2,'#d82800');r(91,85,138,2,'#d82800');
-b.font='32px '+FONT;b.textBaseline='top';b.textAlign='center';b.fillStyle='#bcbcbc';b.fillText('転転飯店',162,56);b.fillStyle='#d82800';b.fillText('転転飯店',160,54);
+r(104,32,112,24,'#a81000');r(107,35,106,18,'#fcfcfc');r(107,35,106,2,'#d82800');r(107,51,106,2,'#d82800');
+b.font='20px '+FONT;b.textBaseline='top';b.textAlign='center';b.fillStyle='#bcbcbc';b.fillText('転転飯店',162,36);b.fillStyle='#d82800';b.fillText('転転飯店',160,34);
 for(const x of[52,268]){r(x,44,1,8,'#fcfcfc');r(x-7,51,14,3,'#fcfcfc');r(x-11,54,22,24,'#fcfcfc');r(x-10,55,20,22,'#f83800');r(x-6,58,3,12,'#f87858');r(x-7,77,14,3,'#fcfcfc');r(x,80,1,9,'#fcfcfc');r(x-1,89,3,3,'#f8b800')}
 r(0,138,W,42,'#fcfcfc');r(0,138,W,2,'#f8b800');for(let y=140,row=0;y<164;y+=8,row++)for(let x=(row%2)*16;x<W;x+=32)r(x,y,16,8,'#d82800')}
 /* ---------- fighters ---------- */
@@ -114,7 +114,7 @@ for(const f of[P,Z])if(f.nero&&f.nt>=.45&&f.nt<.7){const X=Math.round(f.x),x0=f.
 for(const e of fx){const s=Math.round(8*(1-e.t/.2))+2;ctx.fillStyle=e.c;ctx.fillRect(Math.round(e.x)-s,Math.round(e.y)-1,s*2,2);ctx.fillRect(Math.round(e.x)-1,Math.round(e.y)-s,2,s*2)}
 for(const p of pops)num(p.v,Math.round(p.x),Math.round(p.y),p.s,p.c);
 hud();
-if(ph==='intro')T(pt<.8?'ようい…':'ファイト！',160,58,32,'#fcfcfc','center','#a81000');
+if(ph==='intro')T(pt<.8?'ようい！':'ファイト！',160,66,32,'#fcfcfc','center','#a81000');
 else if(bn.t>0)T(bn.txt,160,58,bn.sz,bn.c,'center','#a81000');
 if(ph==='res'){const R=RS[res];ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(0,30,W,133);ctx.fillStyle='#f8b800';ctx.fillRect(8,40,304,112);ctx.fillStyle='#a81000';ctx.fillRect(11,43,298,106);
  T(R[0],160,48,32,R[3],'center');T(R[1],160,90,16,'#fcfcfc','center');T(R[2],160,108,16,'#fcfcfc','center');if((NOW/500|0)%2)T(res==='void'?'Aボタンでもういちど':'Aボタンでつぎへ',160,128,16,'#f8b800','center')}}
@@ -129,7 +129,7 @@ if(sm){R(-22,-22,1,1,'#a81000');R(-21,-21,3,1,'#a81000');R(-18,-22,1,1,'#a81000'
 R(-12,-4,44,14,'#d82800');R(-12,-4,44,2,'#fcfcfc');if(sm){R(-12,-24,3,10,'#202020');R(-12,-27,3,3,SK)}}
 function box(y,h){ctx.fillStyle='#fcfcfc';ctx.fillRect(4,y,312,h);ctx.fillStyle='#a81000';ctx.fillRect(6,y+2,308,h-4)}
 function drawTitle(){ctx.drawImage(bgc,0,0);ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fcfcfc';ctx.fillRect(0,38,W,2);ctx.fillStyle='#d82800';ctx.fillRect(0,40,W,76);ctx.fillStyle='#fcfcfc';ctx.fillRect(0,116,W,2);
-T('転転飯店',160,52,32,'#fcfcfc','center','#500000');T('中村亮太のネロビティをデューしろ！',160,94,16,'#fcfcfc','center','#500000');if((NOW/500|0)%2)T('Aボタンでスタート',160,146,16,'#d8a090','center')}
+T('転転飯店',160,52,32,'#fcfcfc','center','#500000');T('中村亮太のネロビティをデューしろ！',160,94,16,'#fcfcfc','center','#500000');if((NOW/500|0)%2)T('Aボタンでゲーム開始',160,146,16,'#f8b800','center')}
 function drawStory(){const r=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)};
 r(0,0,W,112,'#fcfcfc');for(let x=0;x<W;x+=16)r(x,18,1,70,'#ece4dc');r(0,88,W,8,'#a81000');r(0,96,W,16,'#fcfcfc');for(let y=96,row=0;y<112;y+=8,row++)for(let x=(row%2)*16;x<W;x+=32)r(x,y,16,8,'#d82800');
 r(20,22,56,46,'#a81000');r(23,25,50,40,'#3cbcfc');r(47,25,2,40,'#fcfcfc');r(23,43,50,2,'#fcfcfc');r(14,18,10,56,'#d82800');r(72,18,10,56,'#d82800');r(130,24,24,8,'#d82800');r(138,16,8,24,'#d82800');
