@@ -74,7 +74,7 @@ f.vy+=620*dt;f.y+=f.vy*dt;if(f.y>=GY){f.y=GY;f.vy=0}f.x=Math.max(14,Math.min(W-1
 function ai(z,p,dt){z.mt-=dt;z.specCd-=dt;
 if(z.enemyType==='crab'&&z.specCd<=0&&Math.abs(p.x-z.x)<76&&Math.abs(p.y-z.y)<30){z.specCd=1.25;z.atk=.45;hurt(p,z,11,false,false);ban('ハサミ攻撃！','#f8b800',18,.5)}
 if(z.enemyType==='giant'&&z.specCd<=0&&Math.abs(p.x-z.x)<72&&Math.abs(p.y-z.y)<34){z.specCd=1.55;z.atk=.55;hurt(p,z,15,false,false);p.stun=.35;p.kb=z.face*75;ban('巨人の踏みつけ！','#f8b800',18,.6)}
-if(z.enemyType==='daruma'&&z.specCd<=0&&Math.abs(p.x-z.x)<190){z.specCd=1.8;fireShot(z,z.x- z.face*24,z.y-48,-1,105,12,'#3cbcfc','water');ban('水啜り攻撃！','#3cbcfc',18,.6)}if(z.gauge>=100&&!z.nero&&z.stun<=0&&Math.abs(p.x-z.x)<44&&Math.random()<.04)z.bd=.15;
+if(z.enemyType==='daruma'&&z.specCd<=0&&Math.abs(p.x-z.x)<190){z.specCd=1.8;fireShot(z,z.x+z.face*24,z.y-48,z.face,105,12,'#3cbcfc','water');ban('水啜り攻撃！','#3cbcfc',18,.6)}if(z.gauge>=100&&!z.nero&&z.stun<=0&&Math.abs(p.x-z.x)<44&&Math.random()<.04)z.bd=.15;
 if(z.mt<=0){const d=Math.abs(p.x-z.x),r=Math.random();
  if(d>38)z.mode=r<.85?'fwd':'jmp';else if((p.atk>0||p.nero)&&r<.5)z.mode='grd';else z.mode=r<.32?'atk':r<.5?'grd':r<.65?'back':r<.75?'jmp':'fwd';
  z.mt=z.mode==='grd'?.55:z.mode==='atk'?.12:.3+Math.random()*.2;if(z.mode==='atk')z.ba=.15}
@@ -85,7 +85,7 @@ function sep(){if(P.ko||Z.ko)return;const dx=Z.x-P.x;if(Math.abs(dx)<12&&Math.ab
 function initF(type){P=mk(90,1);P.isP=1;P.dino=false;const e=ENEMIES.find(v=>v.id===(type||'zeo'))||ENEMIES[0];enemyName=e.name;Z=mk(230,-1);Z.isEnemy=1;Z.enemyType=e.id;Z.hp=Z.maxHp=e.hp;Z.sp=e.id==='zeo'?2:e.id==='daruma'?1.15:.8;Z.gauge=0}
 function toTitle(){initF();ph='title';pt=0;modeSelect=0;shots=[]}
 function newFight(type){initF(type);ph='intro';pt=0;hs=0;pops=[];fx=[];shots=[];bn={t:0};sfx([[330,.08],[440,.08],[660,.16]])}
-function activateDino(){if(ph!=='fight'||P.ko||P.dino)return;P.dino=true;P.fm='';P.ft=0;ban('中村が恐竜に変身！','#f8b800',24,1.5);sfx([[180,.08],[260,.08],[390,.18]],'sawtooth',.06)}
+function activateDino(){if(ph!=='fight'||P.ko||P.dino)return;P.dino=true;P.ba=0;P.bd=0;P.fm='';P.ft=0;ban('中村が恐竜に変身！','#f8b800',24,1.5);sfx([[180,.08],[260,.08],[390,.18]],'sawtooth',.06)}
 function fireShot(owner,x,y,face,speed,damage,color,kind){shots.push({owner,x,y,face,speed,damage,color,kind,t:1.5,hit:false})}
 function upd(dt){
 if(ph==='title'||ph==='res'||ph==='end'||ph==='story'){pt+=dt;if(ph==='story'){const o=sc|0;sc+=dt*30;if((sc|0)>o&&(sc|0)%2===0&&sc<STORY[si].length)sfx([[740,.02]],'square',.015)}return}
@@ -173,7 +173,7 @@ const KM={ArrowLeft:'l',ArrowRight:'r',ArrowUp:'u',ArrowDown:'dn'};
 function toggleSnd(){snd=!snd;$('snd').textContent='おと '+(snd?'ON':'OFF')+' (M)'}
 addEventListener('keydown',e=>{const k=KM[e.key];if(k){if(ph==='title'&&(k==='u'||k==='dn'))press(k);else K[k]=1;e.preventDefault();return}if(e.repeat)return;const c=e.key.toLowerCase();if(c==='a'||c==='d'){heldAB[c]=true;if(heldAB.a&&heldAB.d){activateDino();e.preventDefault();return}if(c==='a')press('a');else press('d');e.preventDefault()}else if(c==='enter'||c===' '){press('a');e.preventDefault()}else if(false)press('d');else if(c==='g')press('cow');else if(c==='b')press('horse');else if(c==='r')press('wolf');else if(c==='m')toggleSnd()});
 addEventListener('keyup',e=>{const k=KM[e.key];if(k)K[k]=0;const c=e.key.toLowerCase();if(c==='a'||c==='d')heldAB[c]=false});addEventListener('blur',()=>{for(const k in K)K[k]=0;heldAB.a=heldAB.d=false});
-document.querySelectorAll('#pad .pb').forEach(b=>{const k=b.dataset.k,ed=['a','d','cow','horse','wolf'].includes(k);b.addEventListener('pointerdown',e=>{e.preventDefault();ed?press(k):K[k]=1});['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,e=>{if(!ed)K[k]=0}))});
+document.querySelectorAll('#pad .pb').forEach(b=>{const k=b.dataset.k,ed=['a','d','cow','horse','wolf'].includes(k);b.addEventListener('pointerdown',e=>{e.preventDefault();if(ph==='title'&&(k==='u'||k==='dn'))press(k);else ed?press(k):K[k]=1});['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,e=>{if(!ed)K[k]=0}))});
 cv.addEventListener('pointerdown',()=>{if(ph==='title'||ph==='res')press('a')});$('snd').onclick=toggleSnd;
 function rs(){const px=$('pad').offsetHeight,s0=Math.min((innerWidth-24)/W,(innerHeight-px-$('help').offsetHeight-90)/H),s=s0>=2?Math.floor(s0):Math.max(s0,.5);cv.style.width=W*s+'px';cv.style.height=H*s+'px'}
 addEventListener('resize',rs);rs();
