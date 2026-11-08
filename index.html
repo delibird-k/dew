@@ -8,6 +8,17 @@ html,body{height:100%;margin:0}
 body{background:#1c0000 repeating-conic-gradient(#2a0000 0 25%,#1c0000 0 50%) 0 0/16px 16px;color:#fcfcfc;font-family:"DotGothic16",monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;user-select:none;-webkit-user-select:none}
 #wrap{border:4px solid #f8b800;outline:4px solid #a81000;background:#000;line-height:0}
 canvas{image-rendering:pixelated;display:block;touch-action:none}
+#howto{font:inherit;font-size:12px;margin-top:7px;background:#500;color:#fcfcfc;border:2px solid #f8b800;padding:5px 14px;cursor:pointer}
+#howtoPanel{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:14px}
+#howtoPanel[hidden]{display:none}
+#howtoCard{width:min(560px,100%);max-height:min(82vh,680px);background:#1c0000;border:3px solid #f8b800;box-shadow:0 0 0 4px #500;display:flex;flex-direction:column}
+.howHead{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#a81000;border-bottom:2px solid #f8b800;font-size:17px}
+#howtoClose{font:inherit;font-size:22px;color:#fff;background:#500;border:1px solid #f8b800;width:34px;height:32px}
+.howBody{padding:10px 15px 14px;overflow-y:auto;overscroll-behavior:contain;font-size:13px;line-height:1.55}
+.howBody h3{font-size:15px;color:#f8b800;margin:12px 0 5px;border-bottom:1px solid #8c4a00;padding-bottom:3px}
+.howBody h3:first-child{margin-top:0}
+.howBody p{margin:4px 0}
+.howBody b{color:#f8d060}
 #snd{font:inherit;font-size:12px;margin-top:12px;background:#a81000;color:#fcfcfc;border:2px solid #f8b800;padding:4px 10px;cursor:pointer}
 #pad{display:none;width:100%;max-width:560px;justify-content:space-between;align-items:center;padding:8px 18px}
 @media(pointer:coarse){#pad{display:flex}}
@@ -19,6 +30,30 @@ canvas{image-rendering:pixelated;display:block;touch-action:none}
 </style></head><body>
 <div id="wrap"><canvas id="c"></canvas></div>
 <button id="snd">おと ON (M)</button>
+<button id="howto" aria-haspopup="dialog" aria-controls="howtoPanel">操作方法</button>
+<div id="howtoPanel" role="dialog" aria-modal="true" aria-labelledby="howtoTitle" hidden>
+  <div id="howtoCard">
+    <div class="howHead"><strong id="howtoTitle">操作方法</strong><button id="howtoClose" aria-label="閉じる">×</button></div>
+    <div class="howBody">
+      <h3>基本操作</h3>
+      <p><b>← / →</b>　左右に移動</p>
+      <p><b>↑</b>　ジャンプ</p>
+      <p><b>↓</b>　ガード（長く使い続けるとゲージがたまり、一定量で一時的にガード不能）</p>
+      <p><b>A</b>　攻撃</p>
+      <p><b>↓ ＋ A</b>　ガード中にAを押してゲージをためる</p>
+      <p><b>D</b>　ネロビティ（ゲージ100％で発動）</p>
+      <h3>牛・馬・狼モード</h3>
+      <p><b>G / 牛</b>　牛モード：攻撃のダメージが2倍</p>
+      <p><b>B / 馬</b>　馬モード：移動速度が2倍</p>
+      <p><b>R / 狼</b>　狼モード：攻撃やガード中のゲージ増加量が2倍</p>
+      <p>各モードの効果は7秒間。使用後は20秒待つと再使用できます。</p>
+      <h3>アーケードモード限定</h3>
+      <p><b>A ＋ D 同時押し</b>　恐竜に変身。Aで炎を発射できます（クールタイム0.5秒）。</p>
+      <h3>スマートフォン</h3>
+      <p>画面下の十字ボタンで移動・ジャンプ・ガード。A・Dボタンで攻撃とネロビティ、牛・馬・狼ボタンで各モードを使えます。</p>
+    </div>
+  </div>
+</div>
 <div id="help">←→ いどう　↑ ジャンプ　↓ ガード（使いすぎ注意）　A こうげき　↓+A ゲージため　D ネロビティ　G 牛　B 馬　R 狼（20秒で再使用）</div>
 <div id="pad"><div class="dp"><button class="pb u" data-k="u">▲</button><button class="pb l" data-k="l">◀</button><button class="pb r" data-k="r">▶</button><button class="pb dn" data-k="dn">▼</button></div><div class="md"><button class="pb" data-k="cow">牛</button><button class="pb" data-k="horse">馬</button><button class="pb" data-k="wolf">狼</button></div><div class="ab"><button class="pb" data-k="a">A<small>こうげき</small></button><button class="pb" data-k="d">D<small>ネロビティ</small></button></div></div>
 <script>
@@ -176,6 +211,11 @@ addEventListener('keydown',e=>{const k=KM[e.key];if(k){if((ph==='title'||ph==='a
 addEventListener('keyup',e=>{const k=KM[e.key];if(k)K[k]=0;const c=e.key.toLowerCase();if(c==='a'||c==='d')heldAB[c]=false});addEventListener('blur',()=>{for(const k in K)K[k]=0;heldAB.a=heldAB.d=false});
 document.querySelectorAll('#pad .pb').forEach(b=>{const k=b.dataset.k,ed=['a','d','cow','horse','wolf'].includes(k);b.addEventListener('pointerdown',e=>{e.preventDefault();if((ph==='title'||ph==='arcadeSelect')&&(k==='u'||k==='dn'||(ph==='arcadeSelect'&&(k==='l'||k==='r'))))press(k);else if(k==='a'||k==='d'){heldAB[k]=true;if(heldAB.a&&heldAB.d)activateDino();else press(k)}else ed?press(k):K[k]=1});['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,e=>{if(!ed)K[k]=0;if(k==='a'||k==='d')heldAB[k]=false}))});
 cv.addEventListener('pointerdown',()=>{if(ph==='title'||ph==='res'||ph==='arcadeSelect')press('a')});$('snd').onclick=toggleSnd;
+const howtoPanel=$('howtoPanel');
+$('howto').onclick=()=>{howtoPanel.hidden=false;$('howtoClose').focus()};
+$('howtoClose').onclick=()=>{howtoPanel.hidden=true;$('howto').focus()};
+howtoPanel.addEventListener('pointerdown',e=>{if(e.target===howtoPanel)howtoPanel.hidden=true});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!howtoPanel.hidden){howtoPanel.hidden=true;$('howto').focus()}});
 function rs(){const px=$('pad').offsetHeight,s0=Math.min((innerWidth-24)/W,(innerHeight-px-$('help').offsetHeight-90)/H),s=s0>=2?Math.floor(s0):Math.max(s0,.5);cv.style.width=W*s+'px';cv.style.height=H*s+'px'}
 addEventListener('resize',rs);rs();
 initF();buildBG();
