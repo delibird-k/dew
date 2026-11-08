@@ -88,7 +88,7 @@ function newFight(type){initF(type);ph='intro';pt=0;hs=0;pops=[];fx=[];shots=[];
 function activateDino(){if(ph!=='fight'||P.ko||P.dino)return;P.dino=true;P.ba=0;P.bd=0;P.fm='';P.ft=0;ban('中村が恐竜に変身！','#f8b800',24,1.5);sfx([[180,.08],[260,.08],[390,.18]],'sawtooth',.06)}
 function fireShot(owner,x,y,face,speed,damage,color,kind){shots.push({owner,x,y,face,speed,damage,color,kind,t:1.5,hit:false})}
 function upd(dt){
-if(ph==='title'||ph==='res'||ph==='end'||ph==='story'){pt+=dt;if(ph==='story'){const o=sc|0;sc+=dt*30;if((sc|0)>o&&(sc|0)%2===0&&sc<STORY[si].length)sfx([[740,.02]],'square',.015)}return}
+if(ph==='title'||ph==='arcadeSelect'||ph==='res'||ph==='end'||ph==='story'){pt+=dt;if(ph==='story'){const o=sc|0;sc+=dt*30;if((sc|0)>o&&(sc|0)%2===0&&sc<STORY[si].length)sfx([[740,.02]],'square',.015)}return}
 if(hs>0){hs-=dt;return}
 pt+=dt;bn.t-=dt;
 if(ph==='intro'){if(pt>1.5){ph='fight';pt=0}}
