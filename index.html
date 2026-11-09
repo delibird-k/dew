@@ -87,7 +87,7 @@ const t=p.x>z.x?1:-1,m=z.mode,go=m==='fwd'||m==='jmp';
 return{r:go&&t>0||m==='back'&&t<0,l:go&&t<0||m==='back'&&t>0,u:m==='jmp',dn:m==='grd'}}
 function updateShots(dt){for(const s of shots){s.x+=s.face*s.speed*dt;s.t-=dt;const target=s.owner===P?Z:P;if(!s.hit&&!target.ko&&Math.abs(s.x-target.x)<(target.enemyType==='giant'?30:target.enemyType==='crab'?24:target.enemyType==='jizo'?26:16)&&Math.abs(s.y-(target.y-25))<30){s.hit=true;hurt(target,s.owner,s.damage,s.owner===P&&s.kind==='fire'&&gameMode==='arcade',target.guard);pops.push({x:s.x,y:s.y,v:s.damage,t:.5,c:s.color,s:2})}}shots=shots.filter(s=>s.t>0&&!s.hit&&s.x>-20&&s.x<W+20)}
 function sep(){if(P.ko||Z.ko)return;const dx=Z.x-P.x,jz=Z.enemyType==='jizo',md=jz?24:12;if(Math.abs(dx)<md&&Math.abs(Z.y-P.y)<(jz?54:18)){const d=dx>=0?1:-1;if(jz)P.x-=d*(md-Math.abs(dx));else{const m=(md-Math.abs(dx))/2;P.x-=d*m;Z.x+=d*m}}}
-function initF(type){P=mk(90,1);P.isP=1;P.dino=false;const e=ENEMIES.find(v=>v.id===(type||'zeo'))||ENEMIES[0];enemyName=e.name;Z=mk(230,-1);Z.isEnemy=1;Z.enemyType=e.id;Z.hp=Z.maxHp=e.hp;Z.sp={zeo:2,daruma:1.15,mitsu:1.1,hashida:.45,jizo:0,shake:1}[e.id]??.8;Z.gauge=0;if(e.id==='jizo')Z.specCd=2;hz=[];if(izeki){P.izeki=1;P.hp=P.maxHp=200;P.sp=2}}
+function initF(type){P=mk(90,1);P.isP=1;P.dino=false;const e=ENEMIES.find(v=>v.id===(type||'zeo'))||ENEMIES[0];enemyName=e.name;Z=mk(230,-1);Z.isEnemy=1;Z.enemyType=e.id;Z.hp=Z.maxHp=e.hp;Z.sp={zeo:2,daruma:1.15,mitsu:1.1,hashida:.45,jizo:0,shake:1}[e.id]??.8;Z.gauge=0;if(e.id==='jizo')Z.specCd=2;hz=[];if(izeki&&e.id==='zeo'){Z.izeki=1;Z.hp=Z.maxHp=200;Z.sp=2;enemyName='井関'}}
 function toTitle(){izeki=false;initF();ph='title';pt=0;modeSelect=0;shots=[]}
 function newFight(type){initF(type);ph='intro';pt=0;hs=0;pops=[];fx=[];shots=[];bn={t:0};sfx([[330,.08],[440,.08],[660,.16]])}
 function activateDino(){if(gameMode!=='arcade'||ph!=='fight'||P.ko||P.dino)return;if(P.izeki){fireSax();return}P.dino=true;P.dinoT=15;P.ba=0;P.bd=0;P.md.cow=P.md.horse=P.md.wolf=0;ban('中村が恐竜に変身！','#f8b800',24,1.5);sfx([[180,.08],[260,.08],[390,.18]],'sawtooth',.06)}
@@ -96,7 +96,7 @@ function upd(dt){
 if(ph==='title'||ph==='howto'||ph==='arcadeSelect'||ph==='res'||ph==='end'||ph==='story'){pt+=dt;if(ph==='story'){const o=sc|0;sc+=dt*30;if((sc|0)>o&&(sc|0)%2===0&&sc<STORY[si].length)sfx([[740,.02]],'square',.015)}return}
 if(hs>0){hs-=dt;return}
 pt+=dt;bn.t-=dt;
-if(ph==='intro'){if(pt>1.5){ph='fight';pt=0;if(izeki)ban('井関 参戦！ A+Dでサックス！','#f8b800',14,2)}}
+if(ph==='intro'){if(pt>1.5){ph='fight';pt=0;if(izeki)ban('ゼオが井関に変身！','#f8b800',14,2)}}
 else if(ph==='fight'){P.fireCd=Math.max(0,P.fireCd-dt);P.saxT=Math.max(0,(P.saxT||0)-dt);if(P.dino){P.dinoT=Math.max(0,P.dinoT-dt);if(P.dinoT<=0){P.dino=false;P.dinoT=0;ban('恐竜モード終了！','#f8b800',18,.8)}}step(P,Z,K,dt);step(Z,P,ai(Z,P,dt),dt);updateShots(dt);updateHaz(dt);if(Z.enemyType==='zeo'&&Z.hp>0&&Z.hp<100){Z.rg+=dt;if(Z.rg>=3){Z.rg-=3;Z.hp=Math.min(Z.maxHp,Z.hp+2);pops.push({x:Z.x,y:Z.y-46,v:2,t:.7,c:'#58d854',s:2})}}else Z.rg=0}
 else{step(P,Z,{},dt);step(Z,P,{},dt);if(pt>1.8){ph='res';pt=0;pops=[];fx=[]}}
 if(ph!=='intro')sep();
@@ -179,7 +179,7 @@ r(-12,-62,9,2,HR);r(3,-62,9,2,HR);r(-10,-58,4,4,K);r(6,-58,4,4,K);r(-1,-54,3,4,S
 if(at){r(-5,-50,10,5,K);r(-4,-50,8,2,W)}else r(-5,-48,10,2,BR);return true}
 return false}
 function drawF(f,p,gy){gy=gy??GY;drawF0(f,f.izeki?PI:p,gy);if(f.izeki&&!f.dino&&!f.ko)drawIzeki(f,gy)}
-function drawF0(f,p,gy){gy=gy??GY;const X=Math.round(f.x),Y=Math.round(f.y),s=f.face;if(f.dino){drawDino(f);return}if(f.isEnemy&&drawEnemy(f))return;ctx.fillStyle=f.md.cow>0?'#f83800cc':f.md.horse>0?'#f8b800cc':f.md.wolf>0?'#3cbcfccc':'#00000088';ctx.fillRect(X-9,gy,18,(f.md.cow>0||f.md.horse>0||f.md.wolf>0)?3:2);
+function drawF0(f,p,gy){gy=gy??GY;const X=Math.round(f.x),Y=Math.round(f.y),s=f.face;if(f.dino){drawDino(f);return}if(f.isEnemy&&!f.izeki&&drawEnemy(f))return;ctx.fillStyle=f.md.cow>0?'#f83800cc':f.md.horse>0?'#f8b800cc':f.md.wolf>0?'#3cbcfccc':'#00000088';ctx.fillRect(X-9,gy,18,(f.md.cow>0||f.md.horse>0||f.md.wolf>0)?3:2);
 const pl=f.stun>0&&((NOW/50|0)%2)?PW:p,B=(dx,dy,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(s>0?X+dx:X-dx-w,Y+dy,w,h)};
 if(f.ko){B(-18,-8,9,8,pl.skin);B(-18,-8,9,3,pl.hair);B(-10,-7,16,7,pl.shirt);B(-6,-3,6,2,pl.belt);B(5,-6,12,6,pl.pants);return}
 const air=f.y<gy-1,lh=air?10:f.guard?7:14,w=(f.walk>0&&!air)?((f.walk*9|0)%2):-1,ty=-lh-12;
@@ -193,7 +193,7 @@ else if(f.atk>0){const e=.32-f.atk,x=(e>.07&&e<.22)?11:4;B(3,ty+3,x,3,pl.shirt);
 else if(f.guard){B(2,ty-7,4,11,pl.shirt);B(2,ty-9,4,3,pl.skin)}
 else{B(2,ty+1,3,8,pl.shirt);B(2,ty+8,3,3,pl.skin)}}
 function hud(){const r=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)},bl=(NOW/150|0)%2;
-r(0,0,W,29,'#000');r(0,29,W,1,'#f8b800');T(izeki?'井関':'中村',8,1,16,'#fcfcfc');T(enemyName,312,1,enemyName.length>5?11:16,'#3cbcfc','right');T('VS',160,1,16,'#f83800','center');
+r(0,0,W,29,'#000');r(0,29,W,1,'#f8b800');T('中村',8,1,16,'#fcfcfc');T(enemyName,312,1,enemyName.length>5?11:16,'#3cbcfc','right');T('VS',160,1,16,'#f83800','center');
 r(8,19,132,9,'#fcfcfc');r(9,20,130,7,'#a81000');r(9,20,Math.round(130*P.hp/P.maxHp),7,'#f8b800');
 const zw=Math.round(130*Z.hp/Z.maxHp),zl=Z.hp>0&&Z.hp<=Z.maxHp*.2;r(180,19,132,9,'#fcfcfc');r(181,20,130,7,'#a81000');r(311-zw,20,zw,7,zl&&bl?'#f83800':'#f8b800');r(285,19,1,9,'#3cbcfc');const zg=Math.round(130*Z.gauge/100);r(311-zg,28,zg,1,Z.gauge>=100&&bl?'#fcfcfc':'#d89030');
 r(0,163,W,17,'#000');r(0,163,W,1,'#f8b800');ctx.font='16px '+FONT;ctx.textBaseline='top';ctx.textAlign='left';ctx.fillStyle='#7a4a38';ctx.fillText('ネロビティ',4,164);
@@ -207,7 +207,7 @@ for(const p of pops)num(p.v,Math.round(p.x),Math.round(p.y),p.s,p.c);
 hud();
 if(ph==='intro')T(pt<.8?'ようい！':'ファイト！',160,66,32,'#fcfcfc','center','#a81000');
 else if(bn.t>0)T(bn.txt,160,58,bn.sz,bn.c,'center','#a81000');
-if(ph==='res'){const R=RS[res]||RS.lose;ctx.fillStyle='rgba(0,0,0,.78)';ctx.fillRect(0,30,W,133);ctx.fillStyle='#f8b800';ctx.fillRect(8,40,304,112);ctx.fillStyle='#a81000';ctx.fillRect(11,43,298,106);T(R[0]||'試合終了',160,48,24,R[3]||'#fcfcfc','center');T((R[1]||'対戦が終了しました').replace('中村亮太',izeki?'井関':'中村亮太'),160,82,13,'#fcfcfc','center');T((R[2]||'相手を選び直そう').replace('ゼオ',enemyName),160,101,12,'#fcfcfc','center');T(gameMode==='arcade'?'Aボタンで相手選択へ':'Aボタンでつぎへ',160,128,13,'#f8b800','center')}}
+if(ph==='res'){const R=RS[res]||RS.lose;ctx.fillStyle='rgba(0,0,0,.78)';ctx.fillRect(0,30,W,133);ctx.fillStyle='#f8b800';ctx.fillRect(8,40,304,112);ctx.fillStyle='#a81000';ctx.fillRect(11,43,298,106);T(R[0]||'試合終了',160,48,24,R[3]||'#fcfcfc','center');T((R[1]||'対戦が終了しました'),160,82,13,'#fcfcfc','center');T((R[2]||'相手を選び直そう').replace('ゼオ',enemyName),160,101,12,'#fcfcfc','center');T(gameMode==='arcade'?'Aボタンで相手選択へ':'Aボタンでつぎへ',160,128,13,'#f8b800','center')}}
 const STORY=['中村「ケンくん、手術受けたくないんだって？」','ケン「だって怖いんだもん」','中村「じゃあこうしよう。僕が明日の試合、ネロビティをデューできれば手術を受けてくれるね？」','ケン「ねろびてぃをでゅー？」','中村「確かに、相手のゼオは速い。」','ケン「知らないスポーツだ」','中村「でも僕がしっかり牛馬狼できればデューが取れるはずなんだ。」','ケン「ホームランを打て！」'];
 let si=0,sc=0;
 function ken(x,y,sc,m,mood){const R=(dx,dy,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(Math.round(x+dx*sc),Math.round(y+dy*sc),w*sc,h*sc)},SK='#f8b878',HR='#000';
@@ -302,7 +302,7 @@ if(boil)for(let i=0;i<3;i++)P(-13+i*11,-56-((NOW/90+i*4)%12|0),2,2,W2);
 else for(let i=0;i<3;i++)P(-9+i*8,-2-((NOW/70+i*9)%14|0),1,1,'#f8b800');
 if(st&&hot&&!fl){R(sx-14,Y-2,4,2,'#bcbcbc');R(sx+10,Y-2,4,2,'#bcbcbc')}};
 statue(X-14,f.pick==='mole','#b07830','#80501c','#d89838',false);
-statue(X+14,f.pick==='sham','#888888','#505050','#b8b8b8',true);
+statue(X+14,f.pick==='sham','#8090b8','#505878','#a8b4d0',true);
 return true}
 function drawShake(r,f,at,tw,wk){const K='#000',S='#202020',S2='#5c5c5c',W2='#fcfcfc',SK='#f8b878',SA='#f87858';
 if(f.ko){const sh=tw?0:1;
