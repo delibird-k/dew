@@ -178,7 +178,7 @@ r(-20,-78,40,10,HR);r(-20,-70,6,10,HR);r(14,-70,6,10,HR);r(-14,-68,9,5,HR);r(-3,
 r(-12,-62,9,2,HR);r(3,-62,9,2,HR);r(-10,-58,4,4,K);r(6,-58,4,4,K);r(-1,-54,3,4,SD);
 if(at){r(-5,-50,10,5,K);r(-4,-50,8,2,W)}else r(-5,-48,10,2,BR);return true}
 return false}
-function drawF(f,p,gy){gy=gy??GY;drawF0(f,f.izeki?PI:p,gy);if(f.izeki&&!f.dino&&!f.ko)drawIzeki(f,gy)}
+function drawF(f,p,gy){gy=gy??GY;drawF0(f,p,gy)}
 function drawF0(f,p,gy){gy=gy??GY;const X=Math.round(f.x),Y=Math.round(f.y),s=f.face;if(f.dino){drawDino(f);return}if(f.isEnemy&&!f.izeki&&drawEnemy(f))return;ctx.fillStyle=f.md.cow>0?'#f83800cc':f.md.horse>0?'#f8b800cc':f.md.wolf>0?'#3cbcfccc':'#00000088';ctx.fillRect(X-9,gy,18,(f.md.cow>0||f.md.horse>0||f.md.wolf>0)?3:2);
 const pl=f.stun>0&&((NOW/50|0)%2)?PW:p,B=(dx,dy,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(s>0?X+dx:X-dx-w,Y+dy,w,h)};
 if(f.ko){B(-18,-8,9,8,pl.skin);B(-18,-8,9,3,pl.hair);B(-10,-7,16,7,pl.shirt);B(-6,-3,6,2,pl.belt);B(5,-6,12,6,pl.pants);return}
