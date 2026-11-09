@@ -25,7 +25,7 @@ canvas{image-rendering:pixelated;display:block;touch-action:none}
 const $=id=>document.getElementById(id),W=320,H=180,GY=156,cv=$('c'),ctx=cv.getContext('2d'),FONT='"DotGothic16",monospace';
 cv.width=W;cv.height=H;ctx.imageSmoothingEnabled=false;
 let P,Z,ph='title',pt=0,howtoScroll=0,hs=0,pops=[],fx=[],shots=[],bn={t:0},res='',snd=true,ac=null,last=0,NOW=0,gameMode='story',modeSelect=0,arcadeIndex=0,heldAB={a:false,d:false};const K={l:0,r:0,u:0,dn:0};
-const ENEMIES=[{id:'zeo',name:'ゼオ',hp:100,scale:1},{id:'crab',name:'讃岐平家蟹',hp:125,scale:1.8},{id:'daruma',name:'水啜り達磨',hp:145,scale:1.65},{id:'giant',name:'巨人',hp:180,scale:2.15},{id:'mitsu',name:'光津 郷',hp:110,scale:1},{id:'hashida',name:'サナギ箸田先生',hp:150,scale:1},{id:'jizo',name:'茹で地蔵&焼き地蔵',hp:130,scale:1},{id:'shake',name:'塩鮭の幹部',hp:120,scale:1}];
+const ENEMIES=[{id:'zeo',name:'ゼオ',hp:100,scale:1},{id:'crab',name:'讃岐平家蟹',hp:125,scale:1.8},{id:'daruma',name:'水啜り達磨',hp:145,scale:1.65},{id:'giant',name:'巨人',hp:180,scale:2.15},{id:'mitsu',name:'光津 郷',hp:110,scale:1},{id:'hashida',name:'サナギ箸田先生',hp:150,scale:1},{id:'jizo',name:'焼き地蔵&茹で地蔵',hp:130,scale:1},{id:'shake',name:'塩鮭の幹部',hp:120,scale:1}];
 let enemyName='ゼオ',hz=[],izeki=false,iCnt=0;
 const PP={skin:'#f8b878',hair:'#000',shirt:'#fcfcfc',shade:'#bcbcbc',pants:'#000',shoe:'#000',belt:'#000',eye:'#000',band:'#f8b878',gold:'#bcbcbc'};
 const PZ={skin:'#f8b878',hair:'#201000',shirt:'#0058f8',shade:'#0000bc',pants:'#0000a8',shoe:'#0000a8',belt:'#3cbcfc',eye:'#000',band:'#f8b878',gold:'#3cbcfc'};
@@ -301,8 +301,8 @@ for(let i=0;i<11;i++){P(-6+i,-13+i,1,1,K);P(5-i,-13+i,1,1,K)}
 if(boil)for(let i=0;i<3;i++)P(-13+i*11,-56-((NOW/90+i*4)%12|0),2,2,W2);
 else for(let i=0;i<3;i++)P(-9+i*8,-2-((NOW/70+i*9)%14|0),1,1,'#f8b800');
 if(st&&hot&&!fl){R(sx-14,Y-2,4,2,'#bcbcbc');R(sx+10,Y-2,4,2,'#bcbcbc')}};
-statue(X-14,f.pick==='mole','#b07830','#80501c','#d89838',true);
-statue(X+14,f.pick==='sham','#8090b8','#505878','#a8b4d0',false);
+statue(X-14,f.pick==='mole','#b07830','#80501c','#d89838',false);
+statue(X+14,f.pick==='sham','#888888','#505050','#b8b8b8',true);
 return true}
 function drawShake(r,f,at,tw,wk){const K='#000',S='#202020',S2='#5c5c5c',W2='#fcfcfc',SK='#f8b878',SA='#f87858';
 if(f.ko){const sh=tw?0:1;
