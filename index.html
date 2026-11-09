@@ -25,7 +25,7 @@ canvas{image-rendering:pixelated;display:block;touch-action:none}
 const $=id=>document.getElementById(id),W=320,H=180,GY=156,cv=$('c'),ctx=cv.getContext('2d'),FONT='"DotGothic16",monospace';
 cv.width=W;cv.height=H;ctx.imageSmoothingEnabled=false;
 let P,Z,ph='title',pt=0,howtoScroll=0,hs=0,pops=[],fx=[],shots=[],bn={t:0},res='',snd=true,ac=null,last=0,NOW=0,gameMode='story',modeSelect=0,arcadeIndex=0,arcadePage=0,stageIndex=0,pendingEnemy='zeo',stage='restaurant',heldAB={a:false,d:false};const K={l:0,r:0,u:0,dn:0};
-const ENEMIES=[{id:'zeo',name:'ゼオ',hp:100,scale:1},{id:'crab',name:'讃岐平家蟹',hp:125,scale:1.8},{id:'daruma',name:'水啜り達磨',hp:145,scale:1.65},{id:'giant',name:'巨人',hp:180,scale:2.15},{id:'mitsu',name:'光津 郷',hp:110,scale:1},{id:'hashida',name:'サナギ箸田先生',hp:150,scale:1},{id:'jizo',name:'焼き地蔵&茹で地蔵',hp:130,scale:1},{id:'shake',name:'塩鮭の幹部',hp:120,scale:1},{id:'tea',name:'お茶',hp:115,scale:1},{id:'hero',name:'勇者',hp:140,scale:1},{id:'ghost',name:'マッチョの幽霊',hp:160,scale:1}];
+const ENEMIES=[{id:'zeo',name:'ゼオ',hp:100,scale:1},{id:'crab',name:'讃岐平家蟹',hp:125,scale:1.8},{id:'daruma',name:'水啜り達磨',hp:145,scale:1.65},{id:'giant',name:'巨人',hp:180,scale:2.15},{id:'mitsu',name:'光津 郷',hp:110,scale:1},{id:'hashida',name:'サナギ箸田先生',hp:150,scale:1},{id:'jizo',name:'焼き地蔵&茹で地蔵',hp:130,scale:1},{id:'shake',name:'塩鮭の幹部',hp:120,scale:1},{id:'tea',name:'お茶',hp:115,scale:1},{id:'hero',name:'勇者',hp:140,scale:1}];
 let enemyName='ゼオ',hz=[],izeki=false,iCnt=0;
 const PP={skin:'#f8b878',hair:'#000',shirt:'#fcfcfc',shade:'#bcbcbc',pants:'#000',shoe:'#000',belt:'#000',eye:'#000',band:'#f8b878',gold:'#bcbcbc'};
 const PZ={skin:'#f8b878',hair:'#201000',shirt:'#0058f8',shade:'#0000bc',pants:'#0000a8',shoe:'#0000a8',belt:'#3cbcfc',eye:'#000',band:'#f8b878',gold:'#3cbcfc'};
@@ -76,7 +76,7 @@ function ai(z,p,dt){z.mt-=dt;z.specCd-=dt;if(z.izeki&&z.specCd<=0&&z.stun<=0&&!z
 if(z.enemyType==='crab'&&z.specCd<=0&&Math.abs(p.x-z.x)<76&&Math.abs(p.y-z.y)<30){z.specCd=1.25;z.atk=.45;hurt(p,z,p.guard?1:5,false,p.guard);ban(p.guard?'ガード！':'ハサミ攻撃！','#f8b800',18,.5)}
 if(z.enemyType==='giant'&&z.specCd<=0&&Math.abs(p.x-z.x)<72&&Math.abs(p.y-z.y)<34){z.specCd=1.55;z.atk=.55;hurt(p,z,p.guard?1:7,false,p.guard);if(!p.guard){p.stun=.35;p.kb=z.face*75}ban(p.guard?'ガード！':'巨人の踏みつけ！','#f8b800',18,.6)}
 if(z.enemyType==='mitsu'&&z.specCd<=0&&z.stun<=0&&!z.nero&&Math.abs(p.x-z.x)<210){z.specCd=.9+Math.random()*.5;z.atk=.28;z.hd=true;fireShot(z,z.x+z.face*26,z.y-28,z.face,190,2,'#f8b800','bullet');sfx([[900,.03],[300,.05]],'square',.04)}
-if(z.enemyType==='tea'&&z.specCd<=0&&z.stun<=0&&!z.nero&&Math.abs(p.x-z.x)<190){z.specCd=1.35;fireShot(z,z.x+z.face*22,z.y-30,z.face,125,4,'#88b858','tea');ban('お茶が飛んできた！','#a0c868',16,.6)}if((z.enemyType==='hero'||z.enemyType==='ghost')&&z.specCd<=0&&Math.abs(p.x-z.x)<65&&Math.abs(p.y-z.y)<35){z.specCd=z.enemyType==='hero'?1.15:1.4;z.atk=.4;hurt(p,z,p.guard?1:(z.enemyType==='hero'?6:7),false,p.guard);ban(p.guard?'ガード！':z.enemyType==='hero'?'勇者のトンカチ！':'マッチョのパンチ！','#f8b800',17,.55)}if(z.enemyType==='shake'&&z.specCd<=0&&z.stun<=0&&!z.nero&&Math.abs(p.x-z.x)<230){z.specCd=1.1+Math.random()*.6;z.atk=.28;z.hd=true;fireShot(z,z.x+z.face*30,z.y-31,z.face,150,3,'#f87858','salmon');sfx([[700,.03],[220,.06],[160,.06]],'square',.04)}
+if(z.enemyType==='tea'&&z.specCd<=0&&z.stun<=0&&!z.nero&&Math.abs(p.x-z.x)<190){z.specCd=1.35;fireShot(z,z.x+z.face*22,z.y-30,z.face,125,4,'#88b858','tea');ban('お茶が飛んできた！','#a0c868',16,.6)}if(z.enemyType==='hero'&&z.specCd<=0&&Math.abs(p.x-z.x)<65&&Math.abs(p.y-z.y)<35){z.specCd=1.15;z.atk=.4;hurt(p,z,p.guard?1:6,false,p.guard);ban(p.guard?'ガード！':'勇者のトンカチ！','#f8b800',17,.55)}if(z.enemyType==='shake'&&z.specCd<=0&&z.stun<=0&&!z.nero&&Math.abs(p.x-z.x)<230){z.specCd=1.1+Math.random()*.6;z.atk=.28;z.hd=true;fireShot(z,z.x+z.face*30,z.y-31,z.face,150,3,'#f87858','salmon');sfx([[700,.03],[220,.06],[160,.06]],'square',.04)}
 if(z.enemyType==='hashida'&&z.specCd<=0&&z.stun<=0&&!z.nero){const dx=Math.abs(p.x-z.x),bf=!!z.butterfly;if(dx<46&&Math.abs(p.y-z.y)<(bf?48:34)){z.specCd=bf?1.05:1.3;z.atk=bf?.38:.45;z.hd=true;hurt(p,z,p.guard?1:(bf?8:6),false,p.guard);ban(p.guard?'ガード！':bf?'蝶の急降下！':'サナギ体当たり！',bf?'#f8b800':'#f8b800',18,.5)}else if(dx<(bf?260:220)){z.specCd=bf?1.15:1.7;z.atk=.35;z.hd=true;fireShot(z,z.x+z.face*14,z.y-(bf?43:34),z.face,bf?155:95,bf?6:3,bf?'#f8b800':'#fcfcfc',bf?'butterfly':'thread');ban(bf?'蝶のりんぷん！':'糸吐き！',bf?'#f8b800':'#fcfcfc',16,.5)}}
 if(z.enemyType==='daruma'&&z.specCd<=0&&Math.abs(p.x-z.x)<190){z.specCd=1.8;fireShot(z,z.x+z.face*25,z.y-25,z.face,125,5,'#3cbcfc','water');ban('水啜り攻撃！','#3cbcfc',18,.6)}if(z.gauge>=100&&!z.nero&&z.stun<=0&&Math.abs(p.x-z.x)<44&&Math.random()<.04)z.bd=.15;
 if(z.mt<=0){const d=Math.abs(p.x-z.x),r=Math.random();
@@ -113,7 +113,7 @@ r(-12,-23,4,3,Yl);r(-4,-23,4,3,Yl);
 r(0,-38,25,22,G);r(3,-41,4,3,Yl);r(11,-41,4,3,Yl);r(15,-31,3,3,'#000');
 if(fire){r(12,-22,13,6,'#000');r(25,-26,8,8,Yl);r(28,-24,6,5,'#f83800')}else r(12,-21,13,2,D)}
 function drawEnemy(f){const{X,Y,r}=pk(f,-1),at=f.atk>0,tw=(NOW/150|0)%2,wk=f.walk>0?((f.walk*8|0)%2):0,K='#000',D='#a81000',M='#d82800',Yl='#f8b800',W='#fcfcfc',SK='#f8b878',SD='#d89030';
-if(['tea','hero','ghost'].includes(f.enemyType))return drawNewEnemy(f,r);if(f.enemyType==='jizo')return drawJizo(f,X,Y);if(f.enemyType==='shake')return drawShake(r,f,at,tw,wk);if(f.enemyType==='crab'){const O='#f83800',Dk='#a81000',LG='#a81000';
+if(['tea','hero'].includes(f.enemyType))return drawNewEnemy(f,r);if(f.enemyType==='jizo')return drawJizo(f,X,Y);if(f.enemyType==='shake')return drawShake(r,f,at,tw,wk);if(f.enemyType==='crab'){const O='#f83800',Dk='#a81000',LG='#a81000';
 if(f.ko){r(-45,-11,18,11,K);r(27,-11,18,11,K);r(-44,-10,16,10,O);r(28,-10,16,10,O);r(-35,-10,3,5,K);r(32,-10,3,5,K);r(-27,-6,6,3,Dk);r(21,-6,6,3,Dk);
 for(const x of[-18,-10,7,15]){const o=(x<0)===(tw===1)?0:2;r(x,-26+o,3,12,LG);r(x-2,-28+o,3,3,LG)}
 r(-23,-17,46,17,K);r(-22,-16,44,16,'#f8b878');r(-14,-14,28,2,Dk);r(-14,-10,28,2,Dk);r(-22,-6,44,6,O);r(-22,-6,44,1,Dk);xe(r,-12,-4,K);xe(r,9,-4,K);return true}
@@ -186,38 +186,7 @@ else if(frame===0){r(8,-24,5,9,O);r(9,-23,3,7,ARM2);r(11,-19,5,4,O);r(12,-18,3,2
 else if(frame===1){r(8,-24,5,9,O);r(9,-23,3,7,ARM2);r(12,-25,5,4,O);r(13,-24,3,2,SK);r(16,-35,3,13,O);r(17,-34,1,11,B);r(10,-40,14,6,O);r(11,-39,12,4,'#a87838');r(13,-38,8,2,'#d8b878')}
 else{r(8,-24,5,9,O);r(9,-23,3,7,ARM2);r(12,-31,5,4,O);r(13,-30,3,2,SK);r(17,-40,3,13,O);r(18,-39,1,11,B);r(11,-45,14,6,O);r(12,-44,12,4,'#a87838');r(14,-43,8,2,'#d8b878')}
 return true}
-if(f.enemyType==='ghost'){
-const O='#201828',G='#b8c8d8',L='#edf4f8',M='#8799aa',SH='#586878',HI='#ffffff';
-/* 参考画像の体格：小さめの頭、広い肩、厚い胸板、大きな腕、割れた腹筋、細い腰 */
-r(-21,-7,14,7,O);r(7,-7,14,7,O);r(-18,-8,11,4,M);r(8,-8,11,4,M);
-/* 首と僧帽筋 */
-r(-9,-48,18,13,O);r(-7,-47,14,12,G);r(-17,-45,34,12,O);r(-15,-43,30,9,G);
-/* 左腕：肩から大きく張り出す上腕、前腕を腹の前へ曲げる */
-r(-37,-43,17,24,O);r(-35,-41,13,20,G);r(-34,-37,10,13,L);r(-38,-29,12,10,O);r(-36,-28,9,8,G);
-r(-35,-22,8,8,O);r(-33,-21,7,6,L);r(-30,-18,13,6,O);r(-28,-17,11,4,G);
-/* 右肩・上腕（パンチ時もこの肩からつなげる） */
-r(19,-44,18,24,O);r(21,-42,14,20,G);r(25,-39,10,14,L);
-/* 胸郭と大胸筋 */
-r(-23,-39,46,20,O);r(-21,-37,21,16,G);r(1,-37,21,16,G);
-r(-19,-35,17,10,L);r(2,-35,17,10,L);r(-17,-28,14,5,M);r(3,-28,14,5,M);
-r(-2,-38,4,16,O);r(-1,-36,2,12,SH);
-/* 腹筋：左右に分かれたブロックを段違いに配置 */
-r(-18,-22,36,20,O);r(-16,-21,32,17,G);
-r(-14,-20,12,6,L);r(2,-20,12,6,L);r(-13,-13,10,5,L);r(3,-13,10,5,L);
-r(-10,-7,8,4,L);r(2,-7,8,4,L);r(-2,-21,4,18,SH);
-/* 細い腰と幽霊らしい裾 */
-r(-17,-5,34,9,O);r(-14,-3,28,5,G);r(-9,1,18,3,L);
-/* 頭・髪：白い短髪を尖ったドットで表現 */
-r(-14,-59,28,16,O);r(-12,-57,24,13,G);r(-10,-56,20,10,L);
-r(-13,-62,7,5,O);r(-11,-64,7,5,O);r(-5,-65,9,5,O);r(2,-64,8,5,O);r(8,-61,7,5,O);
-r(-11,-60,20,5,HI);r(-8,-58,16,3,HI);
-r(-7,-54,4,3,O);r(3,-54,4,3,O);r(-8,-52,5,2,SH);r(3,-52,5,2,SH);r(-2,-49,5,2,SH);r(-4,-46,9,2,O);
-/* 右腕のパンチ：肩を固定し、上腕→前腕→拳を途切れず接続した段階式ドットポーズ */
-if(!at){r(22,-34,10,13,O);r(24,-32,7,10,G);r(26,-25,9,12,O);r(28,-23,6,8,L)}
-else if(frame===0){r(22,-34,10,12,O);r(24,-32,7,9,G);r(27,-29,10,7,O);r(29,-28,7,4,L);r(34,-31,7,8,O);r(35,-29,5,4,L)}
-else if(frame===1){r(22,-34,10,11,O);r(24,-32,7,8,G);r(28,-35,10,7,O);r(30,-34,7,4,L);r(36,-39,8,8,O);r(38,-37,5,4,L)}
-else{r(22,-34,10,10,O);r(24,-32,7,7,G);r(29,-40,10,7,O);r(31,-39,7,4,L);r(37,-46,8,8,O);r(39,-44,5,4,L)}
-return true}return false}function drawF(f,p,gy){gy=gy??GY;drawF0(f,p,gy)}
+return false}function drawF(f,p,gy){gy=gy??GY;drawF0(f,p,gy)}
 function drawF0(f,p,gy){gy=gy??GY;const X=Math.round(f.x),Y=Math.round(f.y),s=f.face;if(f.dino){drawDino(f);return}if(f.isEnemy&&!f.izeki&&drawEnemy(f))return;ctx.fillStyle=f.md.cow>0?'#f83800cc':f.md.horse>0?'#f8b800cc':f.md.wolf>0?'#3cbcfccc':'#00000088';ctx.fillRect(X-9,gy,18,(f.md.cow>0||f.md.horse>0||f.md.wolf>0)?3:2);
 const pl=f.stun>0&&((NOW/50|0)%2)?PW:p,B=(dx,dy,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(s>0?X+dx:X-dx-w,Y+dy,w,h)};
 if(f.ko){B(-18,-8,9,8,pl.skin);B(-18,-8,9,3,pl.hair);B(-10,-7,16,7,pl.shirt);B(-6,-3,6,2,pl.belt);B(5,-6,12,6,pl.pants);return}
