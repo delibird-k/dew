@@ -52,7 +52,7 @@ r(0,138,W,42,'#fcfcfc');r(0,138,W,2,'#f8b800');for(let y=140,row=0;y<164;y+=8,ro
 const mk=(x,face)=>({x,y:GY,vy:0,face,hp:100,maxHp:100,gauge:0,stun:0,kb:0,atk:0,hd:false,pw:1,nero:false,nt:0,nh:false,guard:false,ko:false,koT:0,ba:0,bd:0,walk:0,mode:'fwd',mt:0,md:{cow:0,horse:0,wolf:0},cd:0,ch:0,sp:1,gm:0,gl:0,rg:0,used:{cow:0,horse:0,wolf:0},enemyType:'zeo',dino:false,dinoT:0,fireCd:0,specCd:1});
 function ban(t,c,sz,d){bn={t:d,txt:t,c:c,sz:sz}}
 function strike(f,o,dmg,nero){if(o.ko)return;const hitbox={zeo:{w:10,top:36,bottom:2},crab:{w:48,top:48,bottom:2},daruma:{w:30,top:54,bottom:2},giant:{w:29,top:82,bottom:2},mitsu:{w:10,top:46,bottom:2},hashida:{w:15,top:62,bottom:2},jizo:{w:22,top:54,bottom:2},shake:{w:10,top:46,bottom:2}}[o.enemyType]||{w:10,top:36,bottom:2};const dx=(o.x-f.x)*f.face,reach=(nero?56:26)+hitbox.w-10,attackY=f.y-23;if(dx<-hitbox.w||dx>reach||attackY>o.y-hitbox.bottom||attackY<o.y-hitbox.top)return;const gd=o.guard,dm=dmg*((f.md.cow>0?2:1));if(!nero)f.gauge=Math.min(100,f.gauge+(gd?1:dmg)*2*((f.md.wolf>0?2:1)));f.gm=Math.max(0,f.gm-8);hurt(o,f,gd?1:dm,nero,gd)}
-function hurt(o,f,d,nero,gd){if(gd)d=1;o.hp=Math.max(0,o.hp-d);
+function hurt(o,f,d,nero,gd){if(gd)d=1;const mustFinishWithNero=o.isEnemy&&o.enemyType==='zeo'&&!nero;o.hp=Math.max(mustFinishWithNero?1:0,o.hp-d);
 if(!gd&&!(o.nero&&o.nt<.45)){o.stun=nero?.5:.3;o.kb=f.face*(nero?150:60);o.atk=0;o.nero=false}else if(gd){o.x+=f.face*2;o.gm+=12}
 pops.push({x:o.x,y:o.y-46,v:d,t:.7,c:nero?'#f8b800':gd?'#3cbcfc':'#fcfcfc',s:nero?3:2});
 fx.push({x:o.x-f.face*5,y:o.y-24,t:.2,c:gd?'#3cbcfc':nero?'#fcfcfc':'#f8b800'});
@@ -72,7 +72,7 @@ else{
  else if(!f.guard&&f.ba>0){f.ba=0;f.atk=.32;f.hd=false;f.pw=((1+Math.random()*5)|0)*(f.izeki?2:1);f.walk=0;sfx([[620,.03]],'square',.03)}}
 if(f.guard)f.gm+=45*dt/(f.izeki?2:1);else f.gm=Math.max(0,f.gm-25*dt);if(f.gl>0)f.gl-=dt;if(f.gm>=100){f.gm=0;f.gl=3;f.guard=false;if(f.isP)ban('ガードできない！','#f83800',16,1)}for(const k in f.used)f.used[k]=Math.max(0,f.used[k]-dt);
 f.vy+=620*dt;f.y+=f.vy*dt;if(f.y>=GY){f.y=GY;f.vy=0}f.x=Math.max(14,Math.min(W-14,f.x))}
-function ai(z,p,dt){z.mt-=dt;z.specCd-=dt;if(z.enemyType==='jizo'){jizoAI(z,p,dt);return{}}
+function ai(z,p,dt){z.mt-=dt;z.specCd-=dt;if(z.izeki&&z.specCd<=0&&z.stun<=0&&!z.nero&&Math.abs(p.x-z.x)<230){z.specCd=1.25+Math.random()*.45;z.atk=.28;z.hd=true;z.saxT=.5;fireShot(z,z.x+z.face*18,z.y-17,z.face,165,14,'#7a4a38','poop');ban('井関のサックス！','#c8a868',15,.7);sfx([[392,.07],[466,.07],[587,.1],[80,.12]],'sawtooth',.06)}if(z.enemyType==='jizo'){jizoAI(z,p,dt);return{}}
 if(z.enemyType==='crab'&&z.specCd<=0&&Math.abs(p.x-z.x)<76&&Math.abs(p.y-z.y)<30){z.specCd=1.25;z.atk=.45;hurt(p,z,p.guard?1:7,false,p.guard);ban(p.guard?'ガード！':'ハサミ攻撃！','#f8b800',18,.5)}
 if(z.enemyType==='giant'&&z.specCd<=0&&Math.abs(p.x-z.x)<72&&Math.abs(p.y-z.y)<34){z.specCd=1.55;z.atk=.55;hurt(p,z,p.guard?1:10,false,p.guard);if(!p.guard){p.stun=.35;p.kb=z.face*75}ban(p.guard?'ガード！':'巨人の踏みつけ！','#f8b800',18,.6)}
 if(z.enemyType==='mitsu'&&z.specCd<=0&&z.stun<=0&&!z.nero&&Math.abs(p.x-z.x)<210){z.specCd=.9+Math.random()*.5;z.atk=.28;z.hd=true;fireShot(z,z.x+z.face*26,z.y-28,z.face,190,3,'#f8b800','bullet');sfx([[900,.03],[300,.05]],'square',.04)}
@@ -87,7 +87,7 @@ const t=p.x>z.x?1:-1,m=z.mode,go=m==='fwd'||m==='jmp';
 return{r:go&&t>0||m==='back'&&t<0,l:go&&t<0||m==='back'&&t>0,u:m==='jmp',dn:m==='grd'}}
 function updateShots(dt){for(const s of shots){s.x+=s.face*s.speed*dt;s.t-=dt;const target=s.owner===P?Z:P;if(!s.hit&&!target.ko&&Math.abs(s.x-target.x)<(target.enemyType==='giant'?30:target.enemyType==='crab'?24:target.enemyType==='jizo'?26:16)&&Math.abs(s.y-(target.y-25))<30){s.hit=true;hurt(target,s.owner,s.damage,s.owner===P&&s.kind==='fire'&&gameMode==='arcade',target.guard);pops.push({x:s.x,y:s.y,v:s.damage,t:.5,c:s.color,s:2})}}shots=shots.filter(s=>s.t>0&&!s.hit&&s.x>-20&&s.x<W+20)}
 function sep(){if(P.ko||Z.ko)return;const dx=Z.x-P.x,jz=Z.enemyType==='jizo',md=jz?24:12;if(Math.abs(dx)<md&&Math.abs(Z.y-P.y)<(jz?54:18)){const d=dx>=0?1:-1;if(jz)P.x-=d*(md-Math.abs(dx));else{const m=(md-Math.abs(dx))/2;P.x-=d*m;Z.x+=d*m}}}
-function initF(type){P=mk(90,1);P.isP=1;P.dino=false;const e=ENEMIES.find(v=>v.id===(type||'zeo'))||ENEMIES[0];enemyName=e.name;Z=mk(230,-1);Z.isEnemy=1;Z.enemyType=e.id;Z.hp=Z.maxHp=e.hp;Z.sp={zeo:2,daruma:1.15,mitsu:1.1,hashida:.45,jizo:0,shake:1}[e.id]??.8;Z.gauge=0;if(e.id==='jizo')Z.specCd=2;hz=[];if(izeki&&e.id==='zeo'){Z.izeki=1;Z.hp=Z.maxHp=200;Z.sp=2;enemyName='井関'}}
+function initF(type){P=mk(90,1);P.isP=1;P.dino=false;const e=ENEMIES.find(v=>v.id===(type||'zeo'))||ENEMIES[0];enemyName=e.name;Z=mk(230,-1);Z.isEnemy=1;Z.enemyType=e.id;Z.hp=Z.maxHp=e.hp;Z.sp={zeo:2,daruma:1.15,mitsu:1.1,hashida:.45,jizo:0,shake:1}[e.id]??.8;Z.gauge=0;if(e.id==='jizo')Z.specCd=2;hz=[];if(izeki&&e.id==='zeo'){Z.izeki=1;Z.hp=Z.maxHp=200;Z.sp=2;Z.saxT=0;enemyName='井関'}}
 function toTitle(){izeki=false;initF();ph='title';pt=0;modeSelect=0;shots=[]}
 function newFight(type){initF(type);ph='intro';pt=0;hs=0;pops=[];fx=[];shots=[];bn={t:0};sfx([[330,.08],[440,.08],[660,.16]])}
 function activateDino(){if(gameMode!=='arcade'||ph!=='fight'||P.ko||P.dino)return;if(P.izeki){fireSax();return}P.dino=true;P.dinoT=15;P.ba=0;P.bd=0;P.md.cow=P.md.horse=P.md.wolf=0;ban('中村が恐竜に変身！','#f8b800',24,1.5);sfx([[180,.08],[260,.08],[390,.18]],'sawtooth',.06)}
