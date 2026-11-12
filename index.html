@@ -292,7 +292,7 @@ B(-4,ty-9,8,9,pl.skin);B(-4,ty-9,8,3,pl.hair);B(-4,ty-9,2,7,pl.hair);B(-4,ty-6,8
 if(f.nero){if(f.nt<.45){B(-6,ty-10,3,11,pl.shirt);B(3,ty-10,3,11,pl.shirt);B(-6,ty-12,3,3,pl.skin);B(3,ty-12,3,3,pl.skin);
  for(let i=0;i<8;i++){ctx.fillStyle=i%2?'#f8b800':'#fcfcfc';ctx.fillRect(X-12+i*3+((NOW/30+i*5)%3|0),Y-4-((NOW/18+i*13)%42|0),2,2)}}
  else{B(3,ty+3,16,4,pl.shirt);B(18,ty+2,6,6,pl.skin)}}
-else if(f.atk>0){const e=.32-f.atk;if(f.isP){const a=(e<.06?-60:e<.2?-60+(e-.06)/.14*140:e<.26?80:80-(e-.26)/.06*60)*Math.PI/180,sx=3,sy=ty+3,cs=Math.cos(a),sn=Math.sin(a);for(let k=0;k<9;k++)B(Math.round(sx+cs*k)-1,Math.round(sy+sn*k)-1,3,3,k<5?pl.shirt:pl.skin);B(Math.round(sx+cs*10)-2,Math.round(sy+sn*10)-2,4,4,pl.skin);if(e>.08&&e<.24)B(Math.round(sx+Math.cos(a-.6)*14)-1,Math.round(sy+Math.sin(a-.6)*14)-1,2,2,'#fcfcfc')}else{const x=(e>.07&&e<.22)?11:4;B(3,ty+3,x,3,pl.shirt);B(3+x,ty+2,4,5,pl.skin)}}
+else if(f.atk>0){const e=.32-f.atk,x=(e>.07&&e<.22)?11:4;B(3,ty+3,x,3,pl.shirt);B(3+x,ty+2,4,5,pl.skin)}
 else if(f.guard){B(2,ty-7,4,11,pl.shirt);B(2,ty-9,4,3,pl.skin)}
 else{B(2,ty+1,3,8,pl.shirt);B(2,ty+8,3,3,pl.skin)}}
 function hud(){const r=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)},bl=(NOW/150|0)%2;
