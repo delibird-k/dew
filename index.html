@@ -10,15 +10,32 @@ body{background:#1c0000 repeating-conic-gradient(#2a0000 0 25%,#1c0000 0 50%) 0 
 canvas{image-rendering:pixelated;display:block;touch-action:none}
 #snd{font:inherit;font-size:12px;margin-top:12px;background:#a81000;color:#fcfcfc;border:2px solid #f8b800;padding:4px 10px;cursor:pointer}
 #pad{display:none;width:100%;max-width:560px;justify-content:space-between;align-items:center;padding:8px 18px}
-@media(pointer:coarse){#pad{display:flex}}
-.dp{display:grid;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(3,46px);gap:2px}
-.pb{font:inherit;background:#a81000;color:#fcfcfc;border:3px solid #f8b800;box-shadow:0 4px 0 #500;font-size:18px;touch-action:none;padding:0}
-.pb:active{background:#f83800;transform:translateY(2px)}
+#rotateNotice{display:none}
+.dp{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,52px);gap:3px}
+.pb{font:inherit;background:rgba(190,45,20,.72);color:#f8d878;border:2px solid rgba(248,184,0,.65);box-shadow:0 3px 0 rgba(70,0,0,.65);font-size:20px;touch-action:none;padding:0;backdrop-filter:blur(1px)}
+.pb:active{background:rgba(248,56,0,.9);transform:translateY(2px)}
 .u{grid-area:1/2}.l{grid-area:2/1}.r{grid-area:2/3}.dn{grid-area:3/2}
-.md{display:flex;flex-direction:column;gap:5px}.md .pb{width:46px;height:30px;font-size:14px}.ab{display:flex;gap:14px}.ab .pb{width:74px;height:74px;border-radius:50%;font-size:20px;line-height:1.1}.ab small{font-size:11px;display:block}
+.md{display:flex;flex-direction:row;gap:8px}.md .pb{width:64px;height:58px;font-size:18px}.ab{display:flex;gap:12px}.ab .pb{width:78px;height:78px;border-radius:50%;font-size:22px;line-height:1.1}.ab small{font-size:10px;display:block}
+@media(pointer:coarse) and (orientation:landscape){
+ body{display:block;width:100vw;height:100dvh}
+ #wrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+ #snd{position:fixed;top:max(6px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);margin:0;z-index:5;font-size:10px;padding:2px 7px}
+ #pad{display:block;position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;padding:0;pointer-events:none;z-index:4}
+ #pad>*{position:absolute;pointer-events:auto}
+ #pad .md{left:max(12px,env(safe-area-inset-left));top:48%;transform:translateY(-50%)}
+ #pad .ab{left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom))}
+ #pad .dp{right:max(14px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom))}
+}
+@media(pointer:coarse) and (orientation:portrait){
+ body{background:#160000}
+ #wrap,#snd,#pad{display:none!important}
+ #rotateNotice{display:flex;position:fixed;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding:28px;text-align:center;background:#1c0000;color:#fcfcfc;font-size:18px}
+ #rotateNotice .mark{font-size:44px;color:#f8b800}
+}
 </style></head><body>
 <div id="wrap"><canvas id="c"></canvas></div>
 <button id="snd">おと ON (M)</button>
+<div id="rotateNotice"><div class="mark">↻</div><div>スマートフォンでは横画面にして<br>プレイしてください</div></div>
 
 <div id="pad"><div class="dp"><button class="pb u" data-k="u">▲</button><button class="pb l" data-k="l">◀</button><button class="pb r" data-k="r">▶</button><button class="pb dn" data-k="dn">▼</button></div><div class="md"><button class="pb" data-k="cow">牛</button><button class="pb" data-k="horse">馬</button><button class="pb" data-k="wolf">狼</button></div><div class="ab"><button class="pb" data-k="a">A<small>こうげき</small></button><button class="pb" data-k="d">D<small>ネロビティ</small></button></div></div>
 <script>
@@ -800,8 +817,9 @@ addEventListener('keydown',e=>{if(ph==='pass'){passKey(e);return}if(ph==='howto'
 addEventListener('keyup',e=>{const k=KM[e.key];if(k==='dn')dnT=0;if(k)K[k]=0;const c=e.key.toLowerCase();if(c==='a'||c==='d')heldAB[c]=false});addEventListener('blur',()=>{for(const k in K)K[k]=0;heldAB.a=heldAB.d=false});
 document.querySelectorAll('#pad .pb').forEach(b=>{const k=b.dataset.k,ed=['a','d','cow','horse','wolf'].includes(k);b.addEventListener('pointerdown',e=>{e.preventDefault();if((ph==='title'||ph==='arcadeSelect'||ph==='stageSelect')&&(k==='u'||k==='dn'||(ph==='arcadeSelect'&&(k==='l'||k==='r'))))press(k);else if(k==='a'||k==='d'){heldAB[k]=true;if(heldAB.a&&heldAB.d&&!P.dino)activateDino();else press(k)}else ed?press(k):K[k]=1});['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,e=>{if(!ed)K[k]=0;if(k==='a'||k==='d')heldAB[k]=false}))});
 cv.addEventListener('pointerdown',e=>{if(ph==='pass'||ph==='slot'){const r=cv.getBoundingClientRect();pClick((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height);return}if(ph==='title'){const r=cv.getBoundingClientRect(),y=(e.clientY-r.top)*H/r.height;if(y>=98&&y<114)modeSelect=0;else if(y>=114&&y<130)modeSelect=1;else if(y>=130&&y<146)modeSelect=2;else if(y>=146&&y<166)modeSelect=3;else return;press('a');return}if(ph==='stageSelect'){const r=cv.getBoundingClientRect(),y=(e.clientY-r.top)*H/r.height;stageIndex=Math.max(0,Math.min(3,Math.floor((y-24)/32)));press('a')}else if(ph==='arcadeSelect'){const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;if(x<205&&y>=32&&y<154){const i=Math.max(0,Math.min(ENEMIES.length-1,Math.floor((y-34)/15)));arcadeIndex=i;gameMode='arcade';press('a')}else if(y>=154){gameMode='arcade';press('a')}}else if(ph==='howto'||ph==='res')press('a')});$('snd').onclick=toggleSnd;
-function rs(){const px=$('pad').offsetHeight,s0=Math.min((innerWidth-24)/W,(innerHeight-px-90)/H),s=s0>=2?Math.floor(s0):Math.max(s0,.5);cv.style.width=W*s+'px';cv.style.height=H*s+'px'}
-addEventListener('resize',rs);rs();
+function rs(){const mobile=matchMedia('(pointer:coarse)').matches,landscape=innerWidth>innerHeight;if(mobile&&landscape){const s=Math.min((innerWidth-16)/W,(innerHeight-16)/H);cv.style.width=W*s+'px';cv.style.height=H*s+'px'}else if(mobile){cv.style.width='';cv.style.height=''}else{const px=$('pad').offsetHeight,s0=Math.min((innerWidth-24)/W,(innerHeight-px-90)/H),s=s0>=2?Math.floor(s0):Math.max(s0,.5);cv.style.width=W*s+'px';cv.style.height=H*s+'px'}}
+function requestLandscape(){if(matchMedia('(pointer:coarse)').matches&&screen.orientation&&screen.orientation.lock){screen.orientation.lock('landscape').catch(()=>{})}}
+addEventListener('resize',rs);addEventListener('orientationchange',()=>{rs();requestLandscape()});requestLandscape();rs();
 initF();buildBG();buildStudio();studioPlan();buildSnow();
 if(document.fonts)document.fonts.load('16px DotGothic16',STORY.join('')+'松屋牛めし雪山吹雪ストーリーモードアーケードモード讃岐平家蟹水啜り達磨巨人恐竜ファイヤー茹で地蔵焼き塩鮭の幹部井関参戦地団駄トンカチ勇者モグラピコハン襲撃しゃもじ倒れてくるサックスうんこ発射出撃')/*SNOWFONT*/.then(()=>{buildBG();buildSnow()}).catch(()=>{});
 requestAnimationFrame(loop);
