@@ -799,40 +799,46 @@ return true}
 /* ---- 動き：ほえる=のけぞる／かみつき=突進 ---- */
 let ox=0;if(ro)ox=n%2?1:-1;if(ch)ox=F*8;X+=ox;
 const sw=Math.round(Math.sin(NOW/350)*1.5),open=ro?1:ch?.15:at?.95:.3+.5*(Math.sin(NOW/170)+1)/2,
-bi=2+Math.round(open*7),bo=bi+2,ai=16,ao=19,cx=(ro?-2:ch?9:4)+sw,cy=-46,by=-24;
+bi=4+Math.round(open*7),bo=bi+3,ai=15,ao=18,cx=(ro?-2:ch?9:4)+sw,cy=-46,by=-22;
 /* 植木鉢 */
-R(X-8,Y-13,16,14,'#000');R(X-7,Y-12,14,3,'#d87848');R(X-6,Y-9,12,9,'#b85830');R(X-6,Y-4,12,1,'#783818');R(X-5,Y-12,10,1,'#503020');
+R(X-10,Y-14,20,15,'#000');R(X-9,Y-13,18,4,'#d87848');R(X-9,Y-13,18,1,'#f8a878');R(X-8,Y-9,16,9,'#b85830');R(X-8,Y-9,3,9,'#d87848');R(X-8,Y-3,16,2,'#783818');R(X-7,Y-12,14,1,'#503020');
 /* くき（つるが巻きついている） */
-r(-2,-24,5,11,'#000');r(-1,-24,3,11,'#00a800');r(0,-24,1,11,'#58d854');
-for(let j=0;j<10;j++)r([-1,0,1,0][j&3],-14-j,1,1,'#287828');
+r(-3,-22,7,9,'#000');r(-2,-22,5,9,'#00a800');r(-2,-22,2,9,'#58d854');r(2,-22,1,9,'#005800');
+for(let j=0;j<9;j++)r(-2+Math.abs(((j+1)%4)-2)*1,-14-j,2,1,'#287828');
 /* ハート型の葉っぱ */
 const LF=['.XX...','XXXX..','XXXXX.','.XXXXX','XXXXX.','XXXX..','.XX...'],
 leaf=(dx,dy,fl)=>{for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])LF.forEach((s,i)=>{for(let j=0;j<6;j++)if(s[j]==='X')r(dx+(fl?5-j:j)+a,dy+i+b,1,1,'#000')});LF.forEach((s,i)=>{for(let j=0;j<6;j++)if(s[j]==='X')r(dx+(fl?5-j:j),dy+i,1,1,i<3?'#58d854':'#00a800')})};
-r(2,-18,3,1,'#287828');leaf(5,-21,0);
-r(-5,-23,3,1,'#287828');leaf(-11,-26,1);
+r(3,-17,3,1,'#005800');leaf(6,-20,0);
+r(-6,-21,3,1,'#005800');leaf(-12,-24,1);
 /* まきひげ */
-for(const[a,b]of[[-5,-28],[-6,-29],[-7,-30],[-8,-31],[-9,-32],[-10,-32],[-11,-31],[-11,-30],[-10,-29],[-9,-29],[-9,-30]])r(a,b,1,1,'#58d854');
+for(const[a,b]of[[-6,-28],[-7,-29],[-8,-30],[-9,-31],[-10,-31],[-11,-30],[-12,-29],[-12,-28],[-11,-27],[-10,-27],[-10,-28]])r(a,b,1,1,'#58d854');
 /* ねじれたつぼみ */
-r(5,-26,6,1,'#287828');r(11,-35,4,9,'#000');r(12,-34,2,7,'#7860f8');r(12,-33,1,1,PK);r(13,-31,1,1,PK);r(12,-29,1,1,PK);r(12,-36,2,1,PK);r(11,-27,4,2,'#58d854');
+r(6,-25,6,1,'#005800');r(11,-34,5,9,'#000');r(12,-33,3,7,'#5830e8');r(12,-33,1,7,'#7860f8');r(13,-32,1,1,PK);r(14,-30,1,1,PK);r(13,-28,1,1,PK);r(12,-35,3,1,'#000');r(11,-26,5,2,'#58d854');r(11,-25,5,1,'#00a800');
 /* ラッパ型の花（アサガオ） */
 const H=by-cy;
-for(let yy=by;yy>=cy;yy--){const t=(by-yy)/H,hw=Math.round(3+(ao-3)*t*t),c=Math.round(cx*t),L=c-hw;
+for(let yy=by;yy>=cy;yy--){const t=(by-yy)/H,hw=Math.round(4+(ao-4)*Math.pow(t,1.5)),c=Math.round(cx*t),L=c-hw,wd=hw*2+1;
 r(L-1,yy,1,1,'#000');r(c+hw+1,yy,1,1,'#000');
-r(L,yy,hw*2+1,1,t<.3?'#3a2cc8':t<.7?'#5830e8':'#7860f8');r(L,yy,2,1,'#3010a8');r(c+hw,yy,1,1,'#98a0fc');
-if(t>.18){r(c-Math.round(hw*.62),yy,1,1,PK);r(c+Math.round(hw*.62),yy,1,1,PK);r(c,yy,1,1,'#fcd8f8')}}
-r(-4,-24,9,3,'#000');r(-3,-23,7,2,'#58d854');r(-3,-22,7,1,'#00a800');
-/* 花のふち（星形の5つの色） */
-ell(cx,cy,ao+1,bo+1,'#000');ell(cx,cy,ao,bo,'#c8c8fc');
-for(let k=0;k<5;k++){const a=-Math.PI/2+k*Math.PI*2/5;r(cx+Math.round(Math.cos(a)*(ao-1))-1,cy+Math.round(Math.sin(a)*(bo-1)),2,1,PK)}
+r(L,yy,wd,1,t<.35?'#3a2cc8':t<.7?'#5830e8':'#7860f8');
+r(L,yy,Math.max(2,hw>>1),1,t<.35?'#3010a8':'#3a2cc8');
+r(c+hw-Math.max(1,hw>>2),yy,Math.max(1,hw>>2)+1,1,t<.35?'#5830e8':'#98a0fc');
+if(t>.12){const q=Math.round(hw*.55);r(c-q,yy,1,1,PK);r(c+q,yy,1,1,PK);r(c,yy,1,1,'#fcd8f8');if(hw>7){r(c-q+1,yy,1,1,'#b878d8');r(c+q-1,yy,1,1,'#b878d8');}}}
+r(-5,-23,11,4,'#000');r(-4,-22,9,2,'#58d854');r(-4,-20,9,1,'#00a800');r(-7,-21,3,2,'#000');r(6,-21,3,2,'#000');r(-6,-21,2,1,'#58d854');r(6,-21,2,1,'#58d854');
+/* 花のふち（3階調＋ハイライト） */
+ell(cx,cy,ao+1,bo+1,'#000');ell(cx,cy,ao,bo,'#d8d4fc');
+for(let k=1;k<=bo;k++){const hw=Math.round(ao*Math.sqrt(Math.max(0,1-k*k/(bo*bo+.01))));r(cx-hw,cy+k,hw*2+1,1,k>bo*.5?'#8878d8':'#b0a8f0')}
+r(cx-8,cy-bo,16,1,'#fcfcff');r(cx-12,cy-bo+1,6,1,'#fcfcff');
+for(let k=0;k<5;k++){const a=-Math.PI/2+k*Math.PI*2/5;r(cx+Math.round(Math.cos(a)*(ao-1.5))-1,cy+Math.round(Math.sin(a)*(bo-1.5)),3,2,PK);r(cx+Math.round(Math.cos(a)*(ao-1.5)),cy+Math.round(Math.sin(a)*(bo-1.5))+1,1,1,'#c04888')}
 /* 口の中（目はなし） */
-ell(cx,cy,ai,bi,'#300000');
-if(bi>=4)ell(cx,cy-1,ai-5,bi-2,'#780000');
-if(bi>=6)r(cx-5,cy+bi-3,10,3,'#f87858');
-/* 鋭い牙 */
-const fg=(x0,top,wb,L)=>{const yb=Math.round(bi*Math.sqrt(1-Math.min(.99,x0*x0/(ai*ai))));for(let i=0;i<L;i++){const w=Math.max(1,Math.round(wb*(1-i/L))),y=top?cy-yb+i:cy+yb-i;r(cx+x0-(w>>1),y,w,1,WH);if(w>=3)r(cx+x0-(w>>1)+w-1,y,1,1,'#bcbcbc')}},
-L0=Math.round(2+open*5);
-for(const x0 of[-12,-6,0,6,12])fg(x0,1,Math.abs(x0)>=12?5:4,L0+(Math.abs(x0)>=12?1:0));
-for(const x0 of[-9,-3,3,9])fg(x0,0,4,L0);
+ell(cx,cy,ai,bi,'#1c0000');ell(cx,cy+1,ai-3,Math.max(1,bi-2),'#500000');
+if(bi>=6)ell(cx,cy+2,ai-7,Math.max(1,bi-4),'#a01010');
+if(bi>=7){r(cx-5,cy+bi-4,10,4,'#000');r(cx-4,cy+bi-4,8,3,'#f87858');r(cx-4,cy+bi-4,8,1,'#f8a890');r(cx,cy+bi-4,1,3,'#c84830')}
+/* 鋭い牙（黒フチ＋白＋影） */
+const fg=(x0,top,wb,L,col,pd)=>{const yb=Math.round(bi*Math.sqrt(1-Math.min(.99,x0*x0/(ai*ai))));for(let i=0;i<L+pd;i++){const w=Math.max(1,Math.round(wb*(1-i/L)))+pd*2,y=top?cy-yb+i-pd:cy+yb-i+pd;r(cx+x0-(w>>1),y,w,1,col);if(!pd&&w>=3){r(cx+x0-(w>>1)+w-1,y,1,1,'#bcbcbc');if(i<2)r(cx+x0-(w>>1),y,1,1,'#fcfcfc')}}},
+L0=Math.round(3+open*5),T1=[-10,-5,0,5,10],B1=[-8,-3,3,8];
+for(const x0 of T1)fg(x0,1,Math.abs(x0)>=10?5:4,L0+(Math.abs(x0)>=10?1:0),'#000',1);
+for(const x0 of B1)fg(x0,0,4,L0,'#000',1);
+for(const x0 of T1)fg(x0,1,Math.abs(x0)>=10?5:4,L0+(Math.abs(x0)>=10?1:0),WH,0);
+for(const x0 of B1)fg(x0,0,4,L0,WH,0);
 if(ro)for(let i=0;i<3;i++)r(cx+ao+3+i*5,cy-6+i*7+(n%2)*2,3,3,WH);
 return true}
 /* ---------- input ---------- */
